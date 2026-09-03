@@ -1023,7 +1023,13 @@
         const sorted = [...ideas].sort((a, b) => {
             let valA = a[field];
             let valB = b[field];
-            
+
+            // Ordenar "Ideia" pelo número (#1..#8), não pelo texto do título
+            if (field === 'titulo') {
+                valA = a.id;
+                valB = b.id;
+            }
+
             // Tratar campos numéricos
             if (field === 'viab') {
                 valA = parseInt(valA) || 0;
@@ -1043,7 +1049,7 @@
             }
             
             // Para strings normais, usar localeCompare
-            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif') {
+            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif' && field !== 'titulo') {
                 return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             }
             
