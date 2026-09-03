@@ -260,6 +260,7 @@
         .ideas-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-auto-rows: 1fr;
             gap: 16px;
             margin-bottom: 3rem;
         }
@@ -273,6 +274,9 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .idea-card::before {
@@ -349,6 +353,7 @@
             color: #666;
             margin-bottom: 12px;
             line-height: 1.4;
+            flex-grow: 1;
         }
 
         .idea-metrics {
@@ -371,7 +376,7 @@
             height: 6px;
             border-radius: 3px;
             overflow: hidden;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .viab-fill {
@@ -390,6 +395,7 @@
             font-weight: 600;
             text-align: center;
             transition: all 0.3s;
+            margin-top: auto;
         }
 
         .idea-rec.not {
@@ -900,44 +906,39 @@
     }
 
     /**
-     * Setup do comportamento de accordion no grid
+     * Setup do comportamento de accordion - executado UMA VEZ
      */
     function setupAccordion() {
-        const grid = document.getElementById('ideasGrid');
-        if (!grid) return;
+        // Flag para executar apenas uma vez
+        if (window._accordionInitialized) return;
+        window._accordionInitialized = true;
         
-        // Remover listener anterior se existir
-        if (grid._accordionListener) {
-            grid.removeEventListener('click', grid._accordionListener);
-        }
-        
-        // Criar novo listener
-        const accordionListener = function(e) {
+        // Listener no document com event delegation
+        document.addEventListener('click', function(e) {
+            // Verificar se clicou em um card
             const card = e.target.closest('.idea-card');
             if (!card) return;
             
-            // Evita expandir se clicou no header ou no botão de recomendação
-            if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
+            // Evitar se clicou no header ou recomendação
+            if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) {
+                return;
+            }
             
             const expanded = card.querySelector('.idea-expanded');
-            const isOpen = expanded.classList.contains('show');
+            if (!expanded) return;
             
-            // Fechar TODOS os expandidos
-            document.querySelectorAll('.idea-expanded.show').forEach(exp => {
-                exp.classList.remove('show');
+            const isCurrentlyOpen = expanded.classList.contains('show');
+            
+            // FECHAR TODOS PRIMEIRO
+            document.querySelectorAll('.idea-expanded.show').forEach(el => {
+                el.classList.remove('show');
             });
             
-            // Abrir este apenas se estava fechado
-            if (!isOpen) {
+            // DEPOIS ABRIR APENAS O CLICADO (se estava fechado)
+            if (!isCurrentlyOpen) {
                 expanded.classList.add('show');
             }
-        };
-        
-        // Armazenar referência do listener
-        grid._accordionListener = accordionListener;
-        
-        // Adicionar novo listener
-        grid.addEventListener('click', accordionListener);
+        }, false);
     }
 
     /**
@@ -1080,30 +1081,30 @@
     }
 
     // ==================== INITIALIZATION ====================
+    // Executado apenas UMA VEZ quando o documento carrega
     document.addEventListener('DOMContentLoaded', function() {
-        // Render initial data
+        // 1. Setup listener de accordion (executado UMA VEZ via flag window._accordionInitialized)
+        setupAccordion();
+        
+        // 2. Renderizar dados iniciais
         renderIdeas();
         renderComparison();
-        setupAccordion(); // Setup accordion DEPOIS do primeiro render
 
-        // Filter buttons
+        // 3. Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
-                // Fechar todos os cards ao filtrar
+                // Fechar todos os cards
                 collapseAll();
                 
-                // Re-render ideias
+                // Re-render (listener accordion já está ativo no document, não precisa de novo setup)
                 renderIdeas(btn.dataset.filter);
-                
-                // RE-setup accordion DEPOIS de re-render
-                setupAccordion();
             });
         });
 
-        // Sort table headers
+        // 4. Sort table headers
         document.querySelectorAll('th.sortable').forEach(th => {
             th.addEventListener('click', () => {
                 sortTable(th.dataset.sort);
