@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard interativo para análise de ideias de TCC - Engenharia da Computação">
-    <meta name="author" content="Kelwin">
+    <meta name="author" content="Kelwin - Sanofi Brazil">
     <title>Análise de Ideias para TCC - Dashboard Interativo</title>
     
     <style>
@@ -105,6 +105,43 @@
             border-color: #185FA5;
             color: white;
             box-shadow: 0 8px 24px rgba(24, 95, 165, 0.3);
+        }
+
+        /* ========== EXPAND/COLLAPSE BUTTONS ========== */
+        .expand-btn, .collapse-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .expand-btn {
+            background: #0ca30c;
+            color: white;
+            border: 1px solid #0ca30c;
+        }
+
+        .expand-btn:hover {
+            background: #0a8008;
+            border-color: #0a8008;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(12, 163, 12, 0.3);
+        }
+
+        .collapse-btn {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .collapse-btn:hover {
+            border-color: #185FA5;
+            background: #f0f6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(24, 95, 165, 0.1);
         }
 
         /* ========== TOP 3 CARDS ========== */
@@ -648,7 +685,17 @@
 
     <!-- IDEAS GRID -->
     <div style="margin-bottom: 2rem;">
-        <h2 class="section-title">Todas as 8 Ideias (Clique para expandir)</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 class="section-title" style="margin: 0;">Todas as 8 Ideias (Clique para expandir)</h2>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="expandAll()" class="expand-btn">
+                    📖 Expandir Todos
+                </button>
+                <button onclick="collapseAll()" class="collapse-btn">
+                    📕 Retrair Todos
+                </button>
+            </div>
+        </div>
         <div class="ideas-container" id="ideasGrid"></div>
     </div>
 
@@ -768,7 +815,7 @@
             }
             
             const html = `
-                <div class="idea-card" id="idea-${idea.id}">
+                <div class="idea-card" id="idea-${idea.id}" data-idea-id="${idea.id}">
                     <div class="idea-header">
                         <span class="idea-num">#${idea.num}</span>
                         <h3 class="idea-title">${idea.titulo}</h3>
@@ -812,29 +859,42 @@
             `;
             grid.innerHTML += html;
         });
-        
-        // Adicionar listeners para expandir
-        document.querySelectorAll('.idea-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
-                const expanded = this.querySelector('.idea-expanded');
-                expanded.classList.toggle('show');
+    }
+
+    /**
+     * Rola até uma ideia e expande (fecha os outros)
+     */
+    function scrollToIdea(ideaId) {
+        const element = document.getElementById(`idea-${ideaId}`);
+        if (element) {
+            // Fechar todos os outros
+            document.querySelectorAll('.idea-expanded.show').forEach(exp => {
+                exp.classList.remove('show');
             });
+            
+            // Abrir o selecionado
+            const expanded = element.querySelector('.idea-expanded');
+            expanded.classList.add('show');
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    /**
+     * Expande todos os cards
+     */
+    function expandAll() {
+        document.querySelectorAll('.idea-expanded').forEach(exp => {
+            exp.classList.add('show');
         });
     }
 
     /**
-     * Rola até uma ideia e expande
+     * Retrai todos os cards
      */
-    function scrollToIdea(ideaId) {
-        const grid = document.getElementById('ideasGrid');
-        grid.addEventListener('click', function(e) {
-            const card = e.target.closest('.idea-card');
-        if (card) {
-            card.querySelector('.idea-expanded').classList.toggle('show');
-    }
-});
-        }
+    function collapseAll() {
+        document.querySelectorAll('.idea-expanded').forEach(exp => {
+            exp.classList.remove('show');
+        });
     }
 
     /**
@@ -873,6 +933,12 @@
     }
 
     /**
+     * Mapa de valores para ordenação
+     */
+    const riskMap = { 'Baixo': 1, 'Médio': 2, 'Alto': 3 };
+    const diffMap = { 'Média': 1, 'Alta': 2 };
+
+    /**
      * Ordena tabela por coluna
      */
     function sortTable(field) {
@@ -899,14 +965,30 @@
             let valA = a[field];
             let valB = b[field];
             
+            // Tratar campos numéricos
             if (field === 'viab') {
                 valA = parseInt(valA) || 0;
                 valB = parseInt(valB) || 0;
             }
             
-            if (typeof valA === 'string') {
+            // Tratar risco com mapa customizado
+            if (field === 'risk') {
+                valA = riskMap[valA] || 999;
+                valB = riskMap[valB] || 999;
+            }
+            
+            // Tratar dificuldade com mapa customizado
+            if (field === 'dif') {
+                valA = diffMap[valA] || 999;
+                valB = diffMap[valB] || 999;
+            }
+            
+            // Para strings normais, usar localeCompare
+            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif') {
                 return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             }
+            
+            // Para valores numéricos
             return currentSort.asc ? valA - valB : valB - valA;
         });
         
@@ -942,12 +1024,23 @@
 
     // ==================== INITIALIZATION ====================
     document.addEventListener('DOMContentLoaded', function() {
+        // Render initial data
+        renderIdeas();
+        renderComparison();
+
         // Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                
+                // Fechar todos os cards expandidos ao filtrar
+                document.querySelectorAll('.idea-expanded.show').forEach(exp => {
+                    exp.classList.remove('show');
+                });
+                
                 renderIdeas(btn.dataset.filter);
+                setupGridListener();
             });
         });
 
@@ -958,10 +1051,47 @@
             });
         });
 
-        // Render initial data
-        renderIdeas();
-        renderComparison();
+        // Setup initial grid listener
+        setupGridListener();
     });
+
+    /**
+     * Setup do event listener do grid (separate function para reuso)
+     */
+    function setupGridListener() {
+        const grid = document.getElementById('ideasGrid');
+        
+        // Remove listeners antigos (se houver)
+        const oldListener = grid._clickListener;
+        if (oldListener) {
+            grid.removeEventListener('click', oldListener);
+        }
+        
+        // Novo listener
+        const clickListener = function(e) {
+            const card = e.target.closest('.idea-card');
+            if (!card) return;
+            
+            // Evita expandir se clicou no header ou no botão de recomendação
+            if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
+            
+            const expanded = card.querySelector('.idea-expanded');
+            
+            // Se já está aberto, apenas fecha
+            if (expanded.classList.contains('show')) {
+                expanded.classList.remove('show');
+            } else {
+                // Se está fechado, fecha todos os outros e abre este
+                document.querySelectorAll('.idea-expanded.show').forEach(exp => {
+                    exp.classList.remove('show');
+                });
+                expanded.classList.add('show');
+            }
+        };
+        
+        grid._clickListener = clickListener;
+        grid.addEventListener('click', clickListener);
+    }
 </script>
 
 </body>
