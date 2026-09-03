@@ -898,6 +898,35 @@
     }
 
     /**
+     * Setup do comportamento de accordion no grid
+     */
+    function setupAccordion() {
+        const grid = document.getElementById('ideasGrid');
+        if (!grid) return;
+        
+        grid.addEventListener('click', function(e) {
+            const card = e.target.closest('.idea-card');
+            if (!card) return;
+            
+            // Evita expandir se clicou no header ou no botão de recomendação
+            if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
+            
+            const expanded = card.querySelector('.idea-expanded');
+            const isOpen = expanded.classList.contains('show');
+            
+            // Fechar TODOS os expandidos
+            document.querySelectorAll('.idea-expanded.show').forEach(exp => {
+                exp.classList.remove('show');
+            });
+            
+            // Abrir este apenas se estava fechado
+            if (!isOpen) {
+                expanded.classList.add('show');
+            }
+        });
+    }
+
+    /**
      * Renderiza tabela de comparação
      */
     function renderComparison() {
@@ -1027,6 +1056,9 @@
         // Render initial data
         renderIdeas();
         renderComparison();
+        
+        // Setup accordion behavior (apenas UMA VEZ)
+        setupAccordion();
 
         // Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1034,13 +1066,11 @@
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
-                // Fechar todos os cards expandidos ao filtrar
-                document.querySelectorAll('.idea-expanded.show').forEach(exp => {
-                    exp.classList.remove('show');
-                });
+                // Fechar todos os cards ao filtrar
+                collapseAll();
                 
+                // Re-render ideias
                 renderIdeas(btn.dataset.filter);
-                setupGridListener();
             });
         });
 
@@ -1050,48 +1080,7 @@
                 sortTable(th.dataset.sort);
             });
         });
-
-        // Setup initial grid listener
-        setupGridListener();
     });
-
-    /**
-     * Setup do event listener do grid (separate function para reuso)
-     */
-    function setupGridListener() {
-        const grid = document.getElementById('ideasGrid');
-        
-        // Remove listeners antigos (se houver)
-        const oldListener = grid._clickListener;
-        if (oldListener) {
-            grid.removeEventListener('click', oldListener);
-        }
-        
-        // Novo listener
-        const clickListener = function(e) {
-            const card = e.target.closest('.idea-card');
-            if (!card) return;
-            
-            // Evita expandir se clicou no header ou no botão de recomendação
-            if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
-            
-            const expanded = card.querySelector('.idea-expanded');
-            
-            // Se já está aberto, apenas fecha
-            if (expanded.classList.contains('show')) {
-                expanded.classList.remove('show');
-            } else {
-                // Se está fechado, fecha todos os outros e abre este
-                document.querySelectorAll('.idea-expanded.show').forEach(exp => {
-                    exp.classList.remove('show');
-                });
-                expanded.classList.add('show');
-            }
-        };
-        
-        grid._clickListener = clickListener;
-        grid.addEventListener('click', clickListener);
-    }
 </script>
 
 </body>
