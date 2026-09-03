@@ -3,15 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise de Ideias para TCC</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="Dashboard interativo para análise de ideias de TCC - Engenharia da Computação">
+    <meta name="author" content="Kelwin - Sanofi Brazil">
+    <title>Análise de Ideias para TCC - Dashboard Interativo</title>
+    
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: #333; }
-        
-        .dashboard-wrapper { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
-        
-        .hero-section { 
+        /* ========== RESET E BASE ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========== CONTAINER ========== */
+        .dashboard-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero-section {
             background: linear-gradient(135deg, #185FA5 0%, #0C447C 100%);
             border-radius: 20px;
             padding: 2.5rem;
@@ -21,7 +41,7 @@
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(24, 95, 165, 0.3);
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -29,24 +49,37 @@
             right: -10%;
             width: 400px;
             height: 400px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
             filter: blur(40px);
         }
-        
-        .hero-content { position: relative; z-index: 1; }
-        .hero-title { font-size: 28px; font-weight: 600; margin: 0 0 8px 0; }
-        .hero-subtitle { font-size: 14px; opacity: 0.9; margin: 0; }
-        
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        /* ========== FILTERS ========== */
         .filters-section {
             display: flex;
             gap: 8px;
             margin: 2.5rem 0;
-            overflow-x: auto;
-            padding-bottom: 8px;
             flex-wrap: wrap;
         }
-        
+
         .filter-btn {
             padding: 10px 16px;
             border: none;
@@ -60,75 +93,76 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
         }
-        
+
         .filter-btn:hover {
             border-color: #185FA5;
             background: #f0f6ff;
             transform: translateY(-2px);
         }
-        
+
         .filter-btn.active {
             background: linear-gradient(135deg, #185FA5, #0C447C);
             border-color: #185FA5;
             color: white;
             box-shadow: 0 8px 24px rgba(24, 95, 165, 0.3);
         }
-        
+
+        /* ========== TOP 3 CARDS ========== */
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 3rem 0 20px 0;
+            color: #333;
+        }
+
         .top3-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 3rem;
         }
-        
+
         .top-card {
             background: white;
             border: 1px solid #ddd;
             border-radius: 16px;
             padding: 24px;
-            position: relative;
-            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
         }
-        
+
         .top-card:hover {
             transform: translateY(-8px);
             border-color: #185FA5;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .top-card.top1 {
             border: 2px solid #0ca30c;
             background: linear-gradient(135deg, rgba(12, 163, 12, 0.05) 0%, rgba(12, 163, 12, 0.02) 100%);
         }
-        
-        .top-card.top1 .top-badge {
-            background: linear-gradient(135deg, #0ca30c, #085041);
-            box-shadow: 0 8px 16px rgba(12, 163, 12, 0.3);
-        }
-        
+
         .top-card.top2 {
             border: 2px solid #378ADD;
             background: linear-gradient(135deg, rgba(55, 138, 221, 0.05) 0%, rgba(55, 138, 221, 0.02) 100%);
         }
-        
-        .top-card.top2 .top-badge {
-            background: linear-gradient(135deg, #378ADD, #185FA5);
-            box-shadow: 0 8px 16px rgba(55, 138, 221, 0.3);
-        }
-        
+
         .top-card.top3 {
             border: 2px solid #BA7517;
             background: linear-gradient(135deg, rgba(186, 117, 23, 0.05) 0%, rgba(186, 117, 23, 0.02) 100%);
         }
-        
-        .top-card.top3 .top-badge {
-            background: linear-gradient(135deg, #BA7517, #854F0B);
-            box-shadow: 0 8px 16px rgba(186, 117, 23, 0.3);
-        }
-        
+
         .top-badge {
             position: absolute;
             top: 16px;
@@ -140,15 +174,28 @@
             border-radius: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-        
+
+        .top-card.top1 .top-badge {
+            background: linear-gradient(135deg, #0ca30c, #085041);
+        }
+
+        .top-card.top2 .top-badge {
+            background: linear-gradient(135deg, #378ADD, #185FA5);
+        }
+
+        .top-card.top3 .top-badge {
+            background: linear-gradient(135deg, #BA7517, #854F0B);
+        }
+
         .top-title {
             font-size: 18px;
             font-weight: 600;
             margin: 0 0 16px 0;
             color: #333;
         }
-        
+
         .top-stat {
             display: flex;
             justify-content: space-between;
@@ -157,71 +204,29 @@
             border-bottom: 1px solid #eee;
             font-size: 13px;
         }
-        
-        .top-stat:last-child { border-bottom: none; }
-        .stat-label { color: #666; font-weight: 500; }
-        .stat-value { font-weight: 600; color: #333; }
-        
-        .decision-box {
-            background: linear-gradient(135deg, rgba(55, 138, 221, 0.1) 0%, rgba(55, 138, 221, 0.05) 100%);
-            border: 1px solid rgba(55, 138, 221, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 3rem;
+
+        .top-stat:last-child {
+            border-bottom: none;
         }
-        
-        .decision-title {
-            font-size: 14px;
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
             font-weight: 600;
-            color: #185FA5;
-            margin: 0 0 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .decision-q {
-            font-size: 15px;
-            font-weight: 500;
             color: #333;
-            margin: 0 0 16px 0;
         }
-        
-        .decision-opts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-        
-        .opt-btn {
-            padding: 12px 16px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            white-space: normal;
-            text-align: left;
-        }
-        
-        .opt-btn:hover {
-            background: #185FA5;
-            border-color: #185FA5;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(24, 95, 165, 0.2);
-        }
-        
+
+        /* ========== IDEAS GRID ========== */
         .ideas-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 16px;
             margin-bottom: 3rem;
         }
-        
+
         .idea-card {
             background: white;
             border: 1px solid #ddd;
@@ -229,11 +234,10 @@
             padding: 18px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        
+
         .idea-card::before {
             content: '';
             position: absolute;
@@ -244,16 +248,19 @@
             background: linear-gradient(90deg, #185FA5, #378ADD);
             opacity: 0;
             transition: opacity 0.3s;
+            border-radius: 14px 14px 0 0;
         }
-        
+
         .idea-card:hover {
             transform: translateY(-6px);
             border-color: #185FA5;
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
         }
-        
-        .idea-card:hover::before { opacity: 1; }
-        
+
+        .idea-card:hover::before {
+            opacity: 1;
+        }
+
         .idea-header {
             display: flex;
             justify-content: space-between;
@@ -261,7 +268,7 @@
             margin-bottom: 10px;
             gap: 8px;
         }
-        
+
         .idea-num {
             background: #f0f0f0;
             color: #666;
@@ -271,7 +278,7 @@
             font-weight: 600;
             flex-shrink: 0;
         }
-        
+
         .idea-title {
             font-weight: 600;
             font-size: 13px;
@@ -279,7 +286,7 @@
             color: #333;
             flex: 1;
         }
-        
+
         .idea-tag {
             font-size: 9px;
             padding: 4px 8px;
@@ -289,31 +296,31 @@
             letter-spacing: 0.3px;
             flex-shrink: 0;
         }
-        
+
         .tag-completa {
             background: rgba(29, 158, 117, 0.15);
             color: #0f6e56;
         }
-        
+
         .tag-titulo {
             background: rgba(227, 75, 72, 0.15);
             color: #a32d2d;
         }
-        
+
         .idea-desc {
             font-size: 12px;
             color: #666;
             margin-bottom: 12px;
             line-height: 1.4;
         }
-        
+
         .idea-metrics {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-bottom: 12px;
         }
-        
+
         .metric {
             display: flex;
             align-items: center;
@@ -321,7 +328,7 @@
             font-size: 11px;
             color: #666;
         }
-        
+
         .viab-bar {
             background: #f0f0f0;
             height: 6px;
@@ -329,14 +336,14 @@
             overflow: hidden;
             margin-bottom: 8px;
         }
-        
+
         .viab-fill {
             height: 100%;
             background: linear-gradient(90deg, #185FA5, #378ADD);
             border-radius: 3px;
             transition: width 0.3s ease;
         }
-        
+
         .idea-rec {
             padding: 8px 12px;
             background: #e8f5e9;
@@ -347,24 +354,92 @@
             text-align: center;
             transition: all 0.3s;
         }
-        
+
         .idea-rec.not {
             background: #ffebee;
             color: #c62828;
         }
-        
+
         .idea-rec.maybe {
             background: #fff3e0;
             color: #e65100;
         }
-        
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 20px 0;
-            color: #333;
+
+        /* ========== EXPANDED CONTENT ========== */
+        .idea-expanded {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            animation: slideDown 0.3s ease;
         }
-        
+
+        .idea-expanded.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .expanded-section {
+            margin-bottom: 16px;
+        }
+
+        .expanded-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #185FA5;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expanded-list {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .expanded-list li {
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .expanded-list li::before {
+            position: absolute;
+            left: 0;
+        }
+
+        .expanded-text {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+            font-style: italic;
+            background: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #185FA5;
+            border-radius: 4px;
+        }
+
+        /* ========== COMPARISON TABLE ========== */
+        .sort-controls {
+            margin-bottom: 1rem;
+            font-size: 12px;
+            color: #666;
+        }
+
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
@@ -374,9 +449,9 @@
             overflow: hidden;
             border: 1px solid #ddd;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
-        
+
         .comparison-table th {
             background: linear-gradient(135deg, #f5f7fa, #e8eef7);
             padding: 14px;
@@ -384,28 +459,58 @@
             font-weight: 600;
             color: #333;
             border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s;
         }
-        
+
+        .comparison-table th:hover {
+            background: linear-gradient(135deg, #e8eef7, #dfe5f0);
+        }
+
+        .comparison-table th.sortable::after {
+            content: ' ↕';
+            font-size: 10px;
+            opacity: 0.5;
+            margin-left: 4px;
+        }
+
+        .comparison-table th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        .comparison-table th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
         .comparison-table td {
             padding: 14px;
             border-bottom: 1px solid #eee;
         }
-        
+
         .comparison-table tr:last-child td {
             border-bottom: none;
         }
-        
+
         .comparison-table tr:hover {
             background: #f9f9f9;
         }
-        
+
+        .stars {
+            color: #FFB400;
+            letter-spacing: 2px;
+            font-size: 13px;
+        }
+
         .bar-visual {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 11px;
         }
-        
+
         .bar-visual .bar {
             width: 50px;
             height: 4px;
@@ -413,23 +518,87 @@
             border-radius: 2px;
             overflow: hidden;
         }
-        
+
         .bar-visual .bar-fill {
             height: 100%;
             background: linear-gradient(90deg, #185FA5, #378ADD);
+            border-radius: 2px;
         }
-        
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .hero-section { padding: 1.5rem; }
-            .hero-title { font-size: 22px; }
-            .top3-container { grid-template-columns: 1fr; }
-            .decision-opts { grid-template-columns: 1fr; }
+            .dashboard-wrapper {
+                padding: 1rem 0.75rem;
+            }
+
+            .hero-section {
+                padding: 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 22px;
+            }
+
+            .hero-subtitle {
+                font-size: 12px;
+            }
+
+            .top3-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ideas-container {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 11px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+        }
+
+        /* ========== SCROLL TO TOP ========== */
+        .idea-card:target {
+            animation: highlight 2s ease;
+        }
+
+        @keyframes highlight {
+            0% {
+                background-color: #fff9c4;
+            }
+            100% {
+                background-color: white;
+            }
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 3rem;
+        }
+
+        .footer a {
+            color: #185FA5;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
 <div class="dashboard-wrapper">
+    <!-- HERO SECTION -->
     <div class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">Análise de Ideias para TCC</h1>
@@ -437,8 +606,9 @@
         </div>
     </div>
 
+    <!-- FILTERS -->
     <div style="margin-bottom: 2rem;">
-        <div style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Filtrar por:</div>
+        <div class="section-label">Filtrar por:</div>
         <div class="filters-section">
             <button class="filter-btn active" data-filter="all">Todas (8)</button>
             <button class="filter-btn" data-filter="completa">Completas (4)</button>
@@ -447,94 +617,57 @@
         </div>
     </div>
 
+    <!-- TOP 3 SECTION -->
     <div style="margin-bottom: 2rem;">
         <h2 class="section-title">Top 3 Recomendações</h2>
         <div class="top3-container">
-            <div class="top-card top1">
+            <div class="top-card top1" onclick="scrollToIdea(5)">
                 <div class="top-badge">1º Lugar ✨</div>
                 <h3 class="top-title">Anomaly Detection IoT</h3>
-                <div class="top-stat">
-                    <span class="stat-label">Viabilidade</span>
-                    <span class="stat-value">95%</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Risco</span>
-                    <span class="stat-value">Baixo</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Validação</span>
-                    <span class="stat-value">Rápida</span>
-                </div>
+                <div class="top-stat"><span class="stat-label">Viabilidade</span><span class="stat-value">95%</span></div>
+                <div class="top-stat"><span class="stat-label">Risco</span><span class="stat-value">Baixo</span></div>
+                <div class="top-stat"><span class="stat-label">Validação</span><span class="stat-value">Rápida</span></div>
             </div>
-
-            <div class="top-card top2">
+            <div class="top-card top2" onclick="scrollToIdea(3)">
                 <div class="top-badge">2º Lugar</div>
                 <h3 class="top-title">Aquário IoT</h3>
-                <div class="top-stat">
-                    <span class="stat-label">Viabilidade</span>
-                    <span class="stat-value">85%</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Risco</span>
-                    <span class="stat-value">Médio</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Validação</span>
-                    <span class="stat-value">Lenta</span>
-                </div>
+                <div class="top-stat"><span class="stat-label">Viabilidade</span><span class="stat-value">85%</span></div>
+                <div class="top-stat"><span class="stat-label">Risco</span><span class="stat-value">Médio</span></div>
+                <div class="top-stat"><span class="stat-label">Validação</span><span class="stat-value">Lenta</span></div>
             </div>
-
-            <div class="top-card top3">
+            <div class="top-card top3" onclick="scrollToIdea(1)">
                 <div class="top-badge">3º Lugar</div>
                 <h3 class="top-title">Telemetria Automotiva</h3>
-                <div class="top-stat">
-                    <span class="stat-label">Viabilidade</span>
-                    <span class="stat-value">75%*</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Risco</span>
-                    <span class="stat-value">Alto</span>
-                </div>
-                <div class="top-stat">
-                    <span class="stat-label">Validação</span>
-                    <span class="stat-value">Lenta</span>
-                </div>
+                <div class="top-stat"><span class="stat-label">Viabilidade</span><span class="stat-value">75%*</span></div>
+                <div class="top-stat"><span class="stat-label">Risco</span><span class="stat-value">Alto</span></div>
+                <div class="top-stat"><span class="stat-label">Validação</span><span class="stat-value">Lenta</span></div>
             </div>
         </div>
         <div style="font-size: 11px; color: #999; margin-top: 12px;">* Se tiver acesso a veículo real com OBD-II</div>
     </div>
 
-    <div class="decision-box">
-        <div class="decision-title">
-            🎯 Assistente de Decisão
-        </div>
-        <div class="decision-q">Vocês têm acesso fácil a um veículo com OBD-II?</div>
-        <div class="decision-opts">
-            <button class="opt-btn" onclick="alert('SIM: Telemetria pode ser top\n\nMas Anomaly Detection também é excelente (95% viabilidade)')">
-                ✅ SIM → Telemetria pode ser top
-            </button>
-            <button class="opt-btn" onclick="alert('NÃO: Anomaly Detection é ideal!\n\nViabilidade: 95%\nRisco: Baixo\nValidação: Rápida')">
-                ❌ NÃO → Anomaly Detection é ideal
-            </button>
-        </div>
-    </div>
-
+    <!-- IDEAS GRID -->
     <div style="margin-bottom: 2rem;">
-        <h2 class="section-title">Todas as 8 Ideias</h2>
+        <h2 class="section-title">Todas as 8 Ideias (Clique para expandir)</h2>
         <div class="ideas-container" id="ideasGrid"></div>
     </div>
 
+    <!-- COMPARISON TABLE -->
     <div>
         <h2 class="section-title">Comparativo Detalhado</h2>
-        <table class="comparison-table">
+        <div class="sort-controls">
+            💡 Clique no cabeçalho da tabela para ordenar
+        </div>
+        <table class="comparison-table" id="comparisonTable">
             <thead>
                 <tr>
-                    <th>Ideia</th>
-                    <th>Tipo</th>
-                    <th>Dif.</th>
-                    <th>Viabilidade</th>
-                    <th>Timeline</th>
-                    <th>Risco</th>
+                    <th class="sortable" data-sort="titulo">Ideia</th>
+                    <th class="sortable" data-sort="tipo">Tipo</th>
+                    <th class="sortable" data-sort="dif">Dif.</th>
+                    <th class="sortable" data-sort="viab">Viabilidade</th>
+                    <th class="sortable" data-sort="timeline">Timeline</th>
+                    <th class="sortable" data-sort="risk">Risco</th>
+                    <th class="sortable" data-sort="stars">Recomendação</th>
                 </tr>
             </thead>
             <tbody id="comparisonBody"></tbody>
@@ -542,92 +675,291 @@
     </div>
 </div>
 
+<!-- FOOTER -->
+<div class="footer">
+    <p>Dashboard de Análise de TCC | Desenvolvido por Kelwin | Sanofi Brazil 🚀</p>
+</div>
+
 <script>
-const ideas = [
-    { id: 1, num: '1', titulo: 'Telemetria Automotiva', tipo: 'COMPLETA', dif: 'Alta', viab: 75, risk: 'Alto', timeline: 'Apertado', rec: 'recomendado', rec2: 'maybe', stars: '⭐⭐', desc: 'Manutenção Preditiva com OBD-II' },
-    { id: 2, num: '2', titulo: 'Hidropônico Inteligente', tipo: 'COMPLETA', dif: 'Alta', viab: 80, risk: 'Médio', timeline: 'Confortável', rec: 'recomendado', rec2: 'maybe', stars: '⭐', desc: 'Automação com Fertirrigação' },
-    { id: 3, num: '3', titulo: 'Aquário IoT', tipo: 'COMPLETA', dif: 'Média', viab: 85, risk: 'Médio', timeline: 'Confortável', rec: 'recomendado', rec2: 'yes', stars: '⭐⭐', desc: 'Sensores + Câmera + ML' },
-    { id: 4, num: '4', titulo: 'Conversação para Acessibilidade', tipo: 'TÍTULO', dif: 'Média', viab: 40, risk: 'Médio', timeline: 'Rápido', rec: 'nao', rec2: 'not', stars: '❌', desc: 'Interface Conversacional' },
-    { id: 5, num: '5', titulo: 'Anomaly Detection IoT', tipo: 'COMPLETA', dif: 'Média', viab: 95, risk: 'Baixo', timeline: 'Confortável', rec: 'recomendado', rec2: 'yes', stars: '⭐⭐⭐', desc: 'Detecção de Comportamento Anormal' },
-    { id: 6, num: '6', titulo: 'Vazamentos de Água', tipo: 'TÍTULO', dif: 'Média', viab: 60, risk: 'Médio', timeline: 'Lento', rec: 'talvez', rec2: 'maybe', stars: '⭐', desc: 'IoT + Análise de Padrões' },
-    { id: 7, num: '7', titulo: 'Otimizar Filas', tipo: 'TÍTULO', dif: 'Alta', viab: 25, risk: 'Alto', timeline: 'Médio', rec: 'nao', rec2: 'not', stars: '❌', desc: 'Visão + Forecasting (LGPD)' },
-    { id: 8, num: '8', titulo: 'BLE Indoor Navigation', tipo: 'TÍTULO', dif: 'Alta', viab: 35, risk: 'Alto', timeline: 'Lento', rec: 'nao', rec2: 'not', stars: '❌', desc: 'Acessibilidade Visual' }
-];
+    // ==================== DATA ====================
+    const ideas = [
+        { 
+            id: 1, num: '1', titulo: 'Telemetria Automotiva', tipo: 'COMPLETA', dif: 'Alta', viab: 75, risk: 'Alto', timeline: 'Apertado', 
+            rec: 'maybe', stars: '⭐⭐', desc: 'Manutenção Preditiva com OBD-II',
+            pontos_fortes: ['Alinha com expertise em análise', 'Escopo bem definido', 'Inovação real para mercado brasileiro', 'Múltiplas habilidades', 'Relevante para frotas'],
+            pontos_fracos: ['Complexidade ALTA', 'Requer veículo real', 'Dados robustos difíceis', 'Validação lenta', '8 meses pode ser apertado'],
+            dificuldades: ['Integração OBD-II/CAN', 'ML em hardware limitado', 'Testes sem veículo real', 'Segurança e autenticação'],
+            analise: 'Se conseguir resolver acesso ao veículo, é o TCC ideal. Inovador e viável. Pode ser mais curto ajustando escopo.'
+        },
+        { 
+            id: 2, num: '2', titulo: 'Hidropônico Inteligente', tipo: 'COMPLETA', dif: 'Alta', viab: 80, risk: 'Médio', timeline: 'Confortável',
+            rec: 'maybe', stars: '⭐', desc: 'Automação com Fertirrigação',
+            pontos_fortes: ['Escopo bem estruturado', 'Apetite hard-soft', 'Relevância crescente', 'Dashboard visível'],
+            pontos_fracos: ['Infraestrutura cara e frágil', 'Validação lenta', 'Dependência de sensores 100% confiáveis', 'Planta pode morrer', 'Prototipagem toma tempo'],
+            dificuldades: ['Obter sensores calibrados', 'Controle de bombas', 'Manutenção entre testes', 'Prova demora 3-4 meses'],
+            analise: 'Viável se começarem AGORA e tiverem espaço. Risco: perder protótipo. Considere como secundário ou focar em sensor/atuador.'
+        },
+        { 
+            id: 3, num: '3', titulo: 'Aquário IoT', tipo: 'COMPLETA', dif: 'Média', viab: 85, risk: 'Médio', timeline: 'Confortável',
+            rec: 'yes', stars: '⭐⭐', desc: 'Sensores + Câmera + ML + Nuvem',
+            pontos_fortes: ['Escopo equilibrado', 'Viável em protótipo', 'OpenCV é diferencial', 'Sensores baratos', 'Histórico reduz testes'],
+            pontos_fracos: ['Detecção de movimento imprecisa', 'ML em vídeo pode ser overkill', 'Correlação fraca', 'Servidor ativo'],
+            dificuldades: ['Treinamento de modelo', 'Calibração inicial', 'Processamento contínuo', 'Validação ética'],
+            analise: 'Melhor custo-benefício. Menos risco que hidropônico, mais realista que telemetria. Reduz escopo se necessário.'
+        },
+        { 
+            id: 4, num: '4', titulo: 'Conversação para Acessibilidade', tipo: 'TÍTULO', dif: 'Média', viab: 40, risk: 'Médio', timeline: 'Rápido',
+            rec: 'not', stars: '❌', desc: 'Interface Conversacional',
+            pontos_fortes: ['Impacto social real', 'APIs prontas', '100% software'],
+            pontos_fracos: ['Muito genérico', 'Aplicações similares existem', 'Apenas integrar APIs', 'Avaliação subjetiva'],
+            dificuldades: ['Definir escopo específico', 'Testar com usuários reais', 'Modelo customizado caro'],
+            analise: 'Não recomendado como está. Só viável se especificar bem: "chatbot para X em contexto Y".'
+        },
+        { 
+            id: 5, num: '5', titulo: 'Anomaly Detection IoT', tipo: 'COMPLETA', dif: 'Média', viab: 95, risk: 'Baixo', timeline: 'Confortável',
+            rec: 'yes', stars: '⭐⭐⭐', desc: 'Detecção de Comportamento Anormal em Rede IoT',
+            pontos_fortes: ['Alinha com expertise em análise', 'Mercado real', 'Validação clara', 'Diferencial genuíno', 'Escalável', 'Full-stack'],
+            pontos_fracos: ['False positive provavelmente alto', 'Comportamento varia por contexto', 'Processamento tempo real', 'Conceito drift'],
+            dificuldades: ['Feature engineering', 'Limpeza de dados', 'Seleção de algoritmo', 'Adaptação do modelo'],
+            analise: 'ALTAMENTE RECOMENDADO - Mais viável que tudo. Aproveita expertise. Validação clara: detecta anomalia = funciona. TCC garantido.'
+        },
+        { 
+            id: 6, num: '6', titulo: 'Vazamentos de Água', tipo: 'TÍTULO', dif: 'Média', viab: 60, risk: 'Médio', timeline: 'Lento',
+            rec: 'maybe', stars: '⭐', desc: 'IoT + Análise de Padrões',
+            pontos_fortes: ['Problema real e impactante', 'Sensores baratos', 'Análise de padrões perfeita'],
+            pontos_fracos: ['Instalação logisticamente difícil', 'Padrão de consumo varia muito', 'Vazamento pequeno indistinguível', 'Teste 3-6 meses'],
+            dificuldades: ['Calibrar limites por casa', 'Diferenciar vazamento de consumo', 'Coletar dados históricos'],
+            analise: 'Talvez - viável se tiver 1-2 casas reais. Sensor + análise simples. Mas validação é lenta.'
+        },
+        { 
+            id: 7, num: '7', titulo: 'Otimizar Filas', tipo: 'TÍTULO', dif: 'Alta', viab: 25, risk: 'Alto', timeline: 'Médio',
+            rec: 'not', stars: '❌', desc: 'Visão + Forecasting (LGPD issue)',
+            pontos_fortes: ['Caso de uso real', 'Combina CV + forecasting'],
+            pontos_fracos: ['LGPD: não posso coletar vídeo sem consentimento', 'Modelos precisam de meses de dados', 'Instituição não permitirá'],
+            dificuldades: ['Permissão legal', 'Consentimento de clientes', 'Dados insuficientes'],
+            analise: 'Não recomendado - Bloqueios legais fatais (LGPD). Risco legal não vale.'
+        },
+        { 
+            id: 8, num: '8', titulo: 'BLE Indoor Navigation', tipo: 'TÍTULO', dif: 'Alta', viab: 35, risk: 'Alto', timeline: 'Lento',
+            rec: 'not', stars: '❌', desc: 'Acessibilidade Visual',
+            pontos_fortes: ['Impacto social genuíno', 'BLE indoor é ativo em pesquisa', 'MVP viável'],
+            pontos_fracos: ['BLE MUITO impreciso', 'Posicionar beacons é caro', 'Testar com pessoa cega é complexo', 'Hardware caro'],
+            dificuldades: ['Calibração de RSSI', 'Feedback haptico/audio', 'Infraestrutura necessária'],
+            analise: 'Evitar - BLE impreciso demais sem infraestrutura dedicada. Bom para mestrado, não para TCC.'
+        }
+    ];
 
-function renderIdeas(filter = 'all') {
-    const grid = document.getElementById('ideasGrid');
-    grid.innerHTML = '';
-    
-    ideas.forEach(idea => {
-        if (filter !== 'all' && !matchesFilter(idea, filter)) return;
+    // ==================== STATE ====================
+    let currentSort = { field: null, asc: true };
+
+    // ==================== FUNCTIONS ====================
+    /**
+     * Renderiza os cards de ideias
+     */
+    function renderIdeas(filter = 'all') {
+        const grid = document.getElementById('ideasGrid');
+        grid.innerHTML = '';
         
-        const recClass = idea.rec2 === 'yes' ? '' : idea.rec2 === 'maybe' ? 'maybe' : 'not';
-        const recText = idea.rec === 'recomendado' ? `${idea.stars} Recomendado` : idea.rec === 'talvez' ? '⚠️ Talvez' : '❌ Não Recomendado';
-        
-        const html = `
-            <div class="idea-card">
-                <div class="idea-header">
-                    <span class="idea-num">#${idea.num}</span>
-                    <h3 class="idea-title">${idea.titulo}</h3>
-                    <span class="idea-tag ${idea.tipo === 'COMPLETA' ? 'tag-completa' : 'tag-titulo'}">${idea.tipo}</span>
-                </div>
-                <div class="idea-desc">${idea.desc}</div>
-                <div class="idea-metrics">
-                    <div class="metric">📊 Dif: ${idea.dif}</div>
-                    <div class="metric">⏱️ ${idea.timeline}</div>
-                    <div class="metric">⚠️ ${idea.risk}</div>
-                    <div class="metric">✓ ${idea.viab}%</div>
-                </div>
-                <div class="viab-bar"><div class="viab-fill" style="width: ${idea.viab}%"></div></div>
-                <div class="idea-rec ${recClass}">${recText}</div>
-            </div>
-        `;
-        grid.innerHTML += html;
-    });
-}
-
-function matchesFilter(idea, filter) {
-    if (filter === 'completa') return idea.tipo === 'COMPLETA';
-    if (filter === 'titulo') return idea.tipo === 'TÍTULO';
-    if (filter === 'recomendado') return idea.rec === 'recomendado';
-    return true;
-}
-
-function renderComparison() {
-    const tbody = document.getElementById('comparisonBody');
-    tbody.innerHTML = '';
-    
-    ideas.forEach(idea => {
-        const recDisplay = idea.rec === 'recomendado' ? '✅' : idea.rec === 'talvez' ? '⚠️' : '❌';
-        const html = `
-            <tr>
-                <td><strong>#${idea.num} ${idea.titulo}</strong></td>
-                <td>${idea.tipo === 'COMPLETA' ? '📋' : '💡'} ${idea.tipo}</td>
-                <td>${idea.dif}</td>
-                <td>
-                    <div class="bar-visual">
-                        <div class="bar"><div class="bar-fill" style="width: ${idea.viab}%"></div></div>
-                        <span>${idea.viab}%</span>
+        ideas.forEach(idea => {
+            if (filter !== 'all') {
+                if (filter === 'completa' && idea.tipo !== 'COMPLETA') return;
+                if (filter === 'titulo' && idea.tipo !== 'TÍTULO') return;
+                if (filter === 'recomendado' && idea.rec === 'not') return;
+            }
+            
+            const html = `
+                <div class="idea-card" id="idea-${idea.id}">
+                    <div class="idea-header">
+                        <span class="idea-num">#${idea.num}</span>
+                        <h3 class="idea-title">${idea.titulo}</h3>
+                        <span class="idea-tag ${idea.tipo === 'COMPLETA' ? 'tag-completa' : 'tag-titulo'}">${idea.tipo}</span>
                     </div>
-                </td>
-                <td>${idea.timeline}</td>
-                <td><strong>${recDisplay}</strong> ${idea.risk}</td>
-            </tr>
-        `;
-        tbody.innerHTML += html;
-    });
-}
+                    <div class="idea-desc">${idea.desc}</div>
+                    <div class="idea-metrics">
+                        <div class="metric">📊 ${idea.dif}</div>
+                        <div class="metric">⏱️ ${idea.timeline}</div>
+                        <div class="metric">⚠️ ${idea.risk}</div>
+                        <div class="metric">✓ ${idea.viab}%</div>
+                    </div>
+                    <div class="viab-bar"><div class="viab-fill" style="width: ${idea.viab}%"></div></div>
+                    <div class="idea-rec ${idea.rec === 'not' ? 'not' : idea.rec === 'maybe' ? 'maybe' : ''}">${idea.stars} ${idea.rec === 'yes' ? 'Recomendado' : idea.rec === 'maybe' ? 'Talvez' : 'Não Recomendado'}</div>
+                    
+                    <div class="idea-expanded" id="expand-${idea.id}">
+                        <div class="expanded-section">
+                            <div class="expanded-title">📌 Pontos Fortes</div>
+                            <ul class="expanded-list">
+                                ${idea.pontos_fortes.map(p => `<li>✓ ${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="expanded-section">
+                            <div class="expanded-title">⚠️ Pontos Fracos</div>
+                            <ul class="expanded-list">
+                                ${idea.pontos_fracos.map(p => `<li>✗ ${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="expanded-section">
+                            <div class="expanded-title">🛠️ Dificuldades Técnicas</div>
+                            <ul class="expanded-list">
+                                ${idea.dificuldades.map(d => `<li>⚙️ ${d}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="expanded-section">
+                            <div class="expanded-title">📋 Análise Final</div>
+                            <div class="expanded-text">${idea.analise}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.innerHTML += html;
+        });
+        
+        // Adicionar listeners para expandir
+        document.querySelectorAll('.idea-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.idea-rec') || e.target.closest('.idea-header')) return;
+                const expanded = this.querySelector('.idea-expanded');
+                expanded.classList.toggle('show');
+            });
+        });
+    }
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderIdeas(btn.dataset.filter);
-    });
-});
+    /**
+     * Rola até uma ideia e expande
+     */
+    function scrollToIdea(ideaId) {
+        const element = document.getElementById(`idea-${ideaId}`);
+        if (element) {
+            const expanded = element.querySelector('.idea-expanded');
+            expanded.classList.add('show');
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
 
-renderIdeas();
-renderComparison();
+    /**
+     * Renderiza tabela de comparação
+     */
+    function renderComparison() {
+        const tbody = document.getElementById('comparisonBody');
+        tbody.innerHTML = '';
+        
+        ideas.forEach(idea => {
+            const starsDisplay = {
+                '⭐⭐⭐': '⭐⭐⭐',
+                '⭐⭐': '⭐⭐',
+                '⭐': '⭐',
+                '❌': '❌'
+            }[idea.stars] || '—';
+            
+            const html = `
+                <tr>
+                    <td><strong>#${idea.num} ${idea.titulo}</strong></td>
+                    <td>${idea.tipo === 'COMPLETA' ? '📋' : '💡'} ${idea.tipo}</td>
+                    <td>${idea.dif}</td>
+                    <td>
+                        <div class="bar-visual">
+                            <div class="bar"><div class="bar-fill" style="width: ${idea.viab}%"></div></div>
+                            <span>${idea.viab}%</span>
+                        </div>
+                    </td>
+                    <td>${idea.timeline}</td>
+                    <td><strong>${idea.risk}</strong></td>
+                    <td><span class="stars">${starsDisplay}</span></td>
+                </tr>
+            `;
+            tbody.innerHTML += html;
+        });
+    }
+
+    /**
+     * Ordena tabela por coluna
+     */
+    function sortTable(field) {
+        const header = document.querySelector(`th[data-sort="${field}"]`);
+        const tbody = document.getElementById('comparisonBody');
+        
+        if (currentSort.field === field) {
+            currentSort.asc = !currentSort.asc;
+        } else {
+            currentSort.field = field;
+            currentSort.asc = true;
+        }
+        
+        // Update header styles
+        document.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+        if (currentSort.asc) {
+            header.classList.add('sort-asc');
+        } else {
+            header.classList.add('sort-desc');
+        }
+        
+        // Sort data
+        const sorted = [...ideas].sort((a, b) => {
+            let valA = a[field];
+            let valB = b[field];
+            
+            if (field === 'viab') {
+                valA = parseInt(valA) || 0;
+                valB = parseInt(valB) || 0;
+            }
+            
+            if (typeof valA === 'string') {
+                return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            }
+            return currentSort.asc ? valA - valB : valB - valA;
+        });
+        
+        // Render sorted data
+        tbody.innerHTML = '';
+        sorted.forEach(idea => {
+            const starsDisplay = {
+                '⭐⭐⭐': '⭐⭐⭐',
+                '⭐⭐': '⭐⭐',
+                '⭐': '⭐',
+                '❌': '❌'
+            }[idea.stars] || '—';
+            
+            const html = `
+                <tr>
+                    <td><strong>#${idea.num} ${idea.titulo}</strong></td>
+                    <td>${idea.tipo === 'COMPLETA' ? '📋' : '💡'} ${idea.tipo}</td>
+                    <td>${idea.dif}</td>
+                    <td>
+                        <div class="bar-visual">
+                            <div class="bar"><div class="bar-fill" style="width: ${idea.viab}%"></div></div>
+                            <span>${idea.viab}%</span>
+                        </div>
+                    </td>
+                    <td>${idea.timeline}</td>
+                    <td><strong>${idea.risk}</strong></td>
+                    <td><span class="stars">${starsDisplay}</span></td>
+                </tr>
+            `;
+            tbody.innerHTML += html;
+        });
+    }
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderIdeas(btn.dataset.filter);
+            });
+        });
+
+        // Sort table headers
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                sortTable(th.dataset.sort);
+            });
+        });
+
+        // Render initial data
+        renderIdeas();
+        renderComparison();
+    });
 </script>
 
 </body>
