@@ -805,7 +805,7 @@
      */
     function renderIdeas(filter = 'all') {
         const grid = document.getElementById('ideasGrid');
-        grid.innerHTML = '';
+        let html = '';
         
         ideas.forEach(idea => {
             if (filter !== 'all') {
@@ -814,7 +814,7 @@
                 if (filter === 'recomendado' && idea.rec === 'not') return;
             }
             
-            const html = `
+            html += `
                 <div class="idea-card" id="idea-${idea.id}" data-idea-id="${idea.id}">
                     <div class="idea-header">
                         <span class="idea-num">#${idea.num}</span>
@@ -857,8 +857,10 @@
                     </div>
                 </div>
             `;
-            grid.innerHTML += html;
         });
+        
+        // Renderizar TUDO de uma vez
+        grid.innerHTML = html;
     }
 
     /**
@@ -904,7 +906,13 @@
         const grid = document.getElementById('ideasGrid');
         if (!grid) return;
         
-        grid.addEventListener('click', function(e) {
+        // Remover listener anterior se existir
+        if (grid._accordionListener) {
+            grid.removeEventListener('click', grid._accordionListener);
+        }
+        
+        // Criar novo listener
+        const accordionListener = function(e) {
             const card = e.target.closest('.idea-card');
             if (!card) return;
             
@@ -923,7 +931,13 @@
             if (!isOpen) {
                 expanded.classList.add('show');
             }
-        });
+        };
+        
+        // Armazenar referência do listener
+        grid._accordionListener = accordionListener;
+        
+        // Adicionar novo listener
+        grid.addEventListener('click', accordionListener);
     }
 
     /**
@@ -966,6 +980,7 @@
      */
     const riskMap = { 'Baixo': 1, 'Médio': 2, 'Alto': 3 };
     const diffMap = { 'Média': 1, 'Alta': 2 };
+    const timelineMap = { 'Rápido': 1, 'Confortável': 2, 'Médio': 3, 'Apertado': 4, 'Lento': 5 };
 
     /**
      * Ordena tabela por coluna
@@ -994,6 +1009,13 @@
             let valA = a[field];
             let valB = b[field];
             
+            // Ordenar por número da ideia (1-8)
+            if (field === 'titulo') {
+                valA = parseInt(a.num) || 0;
+                valB = parseInt(b.num) || 0;
+                return currentSort.asc ? valA - valB : valB - valA;
+            }
+            
             // Tratar campos numéricos
             if (field === 'viab') {
                 valA = parseInt(valA) || 0;
@@ -1012,8 +1034,14 @@
                 valB = diffMap[valB] || 999;
             }
             
+            // Tratar timeline com mapa customizado
+            if (field === 'timeline') {
+                valA = timelineMap[valA] || 999;
+                valB = timelineMap[valB] || 999;
+            }
+            
             // Para strings normais, usar localeCompare
-            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif') {
+            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif' && field !== 'timeline') {
                 return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             }
             
@@ -1056,9 +1084,7 @@
         // Render initial data
         renderIdeas();
         renderComparison();
-        
-        // Setup accordion behavior (apenas UMA VEZ)
-        setupAccordion();
+        setupAccordion(); // Setup accordion DEPOIS do primeiro render
 
         // Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1071,6 +1097,9 @@
                 
                 // Re-render ideias
                 renderIdeas(btn.dataset.filter);
+                
+                // RE-setup accordion DEPOIS de re-render
+                setupAccordion();
             });
         });
 
