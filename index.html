@@ -556,6 +556,55 @@
             background: #f9f9f9;
         }
 
+        .comparison-table tr.table-row-clickable {
+            cursor: pointer;
+        }
+
+        .row-toggle {
+            display: inline-block;
+            width: 12px;
+            margin-right: 6px;
+            color: #185FA5;
+            font-size: 10px;
+        }
+
+        .comparison-table tr.table-detail-row:hover {
+            background: #f9fbfd;
+        }
+
+        .table-detail-row td {
+            background: #f9fbfd;
+            padding: 24px;
+        }
+
+        .table-detail-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+        }
+
+        .skills-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .skills-list li {
+            margin-bottom: 10px;
+        }
+
+        .skills-list li strong {
+            display: block;
+            color: #185FA5;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
         .stars {
             color: #FFB400;
             letter-spacing: 2px;
@@ -616,6 +665,10 @@
             .comparison-table th,
             .comparison-table td {
                 padding: 10px;
+            }
+
+            .table-detail-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -724,7 +777,7 @@
     <div>
         <h2 class="section-title">Comparativo Detalhado</h2>
         <div class="sort-controls">
-            💡 Clique no cabeçalho da tabela para ordenar
+            💡 Clique no cabeçalho da tabela para ordenar &nbsp;|&nbsp; 🔎 Clique em uma linha com <span class="row-toggle" style="margin:0;">▸</span> para ver os detalhes completos
         </div>
         <table class="comparison-table" id="comparisonTable">
             <thead>
@@ -757,7 +810,26 @@
             pontos_fortes: ['Alinha com expertise em análise', 'Escopo bem definido', 'Inovação real para mercado brasileiro', 'Múltiplas habilidades', 'Relevante para frotas'],
             pontos_fracos: ['Complexidade ALTA', 'Requer veículo real', 'Dados robustos difíceis', 'Validação lenta', '8 meses pode ser apertado'],
             dificuldades: ['Integração OBD-II/CAN', 'ML em hardware limitado', 'Testes sem veículo real', 'Segurança e autenticação'],
-            analise: 'Se conseguir resolver acesso ao veículo, é o TCC ideal. Inovador e viável. Pode ser mais curto ajustando escopo.'
+            analise: 'Se conseguir resolver acesso ao veículo, é o TCC ideal. Inovador e viável. Pode ser mais curto ajustando escopo.',
+            detalhes: {
+                premissas: 'A frota circulante de veículos no Brasil possui uma idade média avançada, majoritariamente composta por veículos que não dispõem de tecnologias nativas de diagnóstico preditivo. A manutenção, nestes casos, ocorre de maneira corretiva ou baseada estritamente na quilometragem, o que resulta em custos elevados e falhas inesperadas. Este projeto visa democratizar o acesso à manutenção inteligente, desenvolvendo um hub de telemetria de baixo custo (aftermarket). O sistema captura dados da rede veicular padrão (OBD-II) e cruza essas informações com sensores físicos externos, criando assinaturas de falha mecânica antes que elas afetem a dirigibilidade do veículo.',
+                ideia_central: {
+                    texto: 'Desenvolver um ecossistema completo (Full-Stack IoT) composto por hardware embarcado em veículo automotor e uma plataforma web para coleta, processamento na borda e análise preditiva de dados mecânicos. Objetivo do projeto:',
+                    lista: [
+                        'Construir um nó sensor utilizando um microcomputador integrado à rede CAN do veículo.',
+                        'Coletar dados universais via barramento OBD-II (RPM, ECT, Velocidade, Falhas) e sinais de vibração via acelerômetro.',
+                        'Processar os dados localmente para identificar anomalias mecânicas.',
+                        'Desenvolver uma interface web estruturada e segura, onde mecânicos autenticados possam acessar dados e métricas do veículo.'
+                    ]
+                },
+                habilidades: [
+                    { area: 'Hardware e Tecnologia Embarcada (Edge Computing)', desc: 'Configuração do Linux na BTT Pi e gestão dos barramentos (I2C, SPI). Desenvolvimento de scripts em Python para capturar pacotes do SocketCAN e dados do acelerômetro. Implementação da lógica de gerenciamento de energia (Safe Shutdown).' },
+                    { area: 'Banco de Dados e Relacionamento', desc: 'Modelagem e implementação do banco de dados relacional, com tabelas de Usuários (Motoristas/Mecânicos), Veículos e histórico de Telemetria estruturado (JSON).' },
+                    { area: 'Autenticação e Proteção de Dados', desc: 'Implementação do controle de acesso (Auth) e da lógica do "Código de Acesso Temporário", garantindo que mecânicos acessem a telemetria do veículo exclusivamente mediante autorização eletrônica do proprietário.' },
+                    { area: 'Análise e Interpretação de Dados (Data Science)', desc: 'Limpeza e cruzamento dos dados brutos com Python (Pandas/NumPy). Criação de modelos que correlacionam a faixa de RPM com anomalias vibracionais. Exportação de algoritmos leves de Machine Learning para processamento direto na borda (BTT Pi).' },
+                    { area: 'Interface Gráfica (Front-End)', desc: 'Desenvolvimento do "Portal do Mecânico": interface web (HTML, JS, CSS) com bibliotecas de visualização gráfica (Chart.js) para apresentar históricos de temperatura, RPM, Fuel Trim e diagnósticos gerados pelo módulo de inteligência.' }
+                ]
+            }
         },
         { 
             id: 2, num: '2', titulo: 'Hidropônico Inteligente', tipo: 'COMPLETA', dif: 'Alta', viab: 80, risk: 'Médio', timeline: 'Confortável',
@@ -765,7 +837,20 @@
             pontos_fortes: ['Escopo bem estruturado', 'Apetite hard-soft', 'Relevância crescente', 'Dashboard visível'],
             pontos_fracos: ['Infraestrutura cara e frágil', 'Validação lenta', 'Dependência de sensores 100% confiáveis', 'Planta pode morrer', 'Prototipagem toma tempo'],
             dificuldades: ['Obter sensores calibrados', 'Controle de bombas', 'Manutenção entre testes', 'Prova demora 3-4 meses'],
-            analise: 'Viável se começarem AGORA e tiverem espaço. Risco: perder protótipo. Considere como secundário ou focar em sensor/atuador.'
+            analise: 'Viável se começarem AGORA e tiverem espaço. Risco: perder protótipo. Considere como secundário ou focar em sensor/atuador.',
+            detalhes: {
+                premissas: 'A agricultura urbana e o cultivo em ambientes controlados surgem como soluções estratégicas para o aproveitamento de espaços e a otimização de recursos naturais. O sistema hidropônico tradicional apresenta alta eficiência hídrica, porém exige monitoramento rigoroso das condições da água para garantir a absorção de nutrientes. O erro humano na dosagem de soluções ou na manutenção do pH frequentemente resulta na perda da safra. Este projeto parte da premissa de que a aplicação de conceitos de Internet das Coisas (IoT) e automação residencial/industrial pode transformar o cultivo hidropônico em uma esteira previsível, escalável e de fácil gestão.',
+                ideia_central: {
+                    texto: 'O desenvolvimento de um Ecossistema Hidropônico Automatizado que integra sensoriamento em tempo real, atuação físico-química corretiva e uma robusta camada de software gerencial. O sistema será capaz de medir a qualidade da solução nutritiva (pH e Condutividade Elétrica) e as condições ambientais (temperatura e luminosidade). A partir destes dados, um controlador tomará decisões autônomas, como acionar bombas peristálticas para correção de nutrientes e controle do fluxo hídrico, além de exportar os dados para um ecossistema em nuvem para acompanhamento remoto.'
+                },
+                habilidades: [
+                    { area: 'Hardware e Firmware (Edge Computing)', desc: 'Uso de ESP32 programado em C++ para orquestrar leituras analógicas/digitais e garantir conectividade Wi-Fi nativa, com possibilidade de incorporar uma Single-Board Computer (Raspberry Pi ou BTT Pi) para processamento local.' },
+                    { area: 'Periféricos e Circuitos', desc: 'Integração de módulos ADC para leitura de pH e TDS, controle de relés para iluminação LED e drivers de potência para bombas dosadoras.' },
+                    { area: 'Estrutura Física e Prototipagem', desc: 'Modelagem em CAD (Autodesk Inventor) de invólucros estanques para proteger a eletrônica da umidade, com fabricação subtrativa e aditiva de peças modulares e cases customizados.' },
+                    { area: 'Software, Automação e Dados', desc: 'Scripts em Python para raspagem e orquestração de dados adicionais (previsão do tempo, integração via APIs), com estruturação de dados relacionais e queries em SQL (ex.: Supabase).' },
+                    { area: 'Governança e Interface', desc: 'Aplicativo para o usuário final em plataforma low-code (Power Apps) para calibração de sensores, e dashboards analíticos no Power BI detalhando consumo de insumos, tendências sazonais e métricas de sucesso do cultivo.' }
+                ]
+            }
         },
         { 
             id: 3, num: '3', titulo: 'Aquário IoT', tipo: 'COMPLETA', dif: 'Média', viab: 85, risk: 'Médio', timeline: 'Confortável',
@@ -773,7 +858,25 @@
             pontos_fortes: ['Escopo equilibrado', 'Viável em protótipo', 'OpenCV é diferencial', 'Sensores baratos', 'Histórico reduz testes'],
             pontos_fracos: ['Detecção de movimento imprecisa', 'ML em vídeo pode ser overkill', 'Correlação fraca', 'Servidor ativo'],
             dificuldades: ['Treinamento de modelo', 'Calibração inicial', 'Processamento contínuo', 'Validação ética'],
-            analise: 'Melhor custo-benefício. Menos risco que hidropônico, mais realista que telemetria. Reduz escopo se necessário.'
+            analise: 'Melhor custo-benefício. Menos risco que hidropônico, mais realista que telemetria. Reduz escopo se necessário.',
+            detalhes: {
+                premissas: 'Um sistema embarcado de monitoramento contínuo para aquários, utilizando Internet das Coisas (IoT) para análise físico-química da água e visão computacional para acompanhamento da fauna. A vida aquática requer controle rigoroso de temperatura, pH e sólidos totais dissolvidos (TDS), já que flutuações invisíveis a olho nu podem ser fatais. A manutenção manual com testes químicos periódicos não previne picos de toxicidade entre medições, e sem histórico de dados a ação do aquarista é sempre reativa. Além da química da água, o nível de atividade e a movimentação da fauna são indicativos vitais em tempo real da saúde do ambiente.',
+                ideia_central: {
+                    texto: 'Projetar um ecossistema completo (Hardware, Software e Nuvem) que atue como os "sentidos" do aquário e facilite o acompanhamento remoto:',
+                    lista: [
+                        'Coleta Sensorial: módulo central Wi-Fi que lê sensores submersíveis dedicados (temperatura DS18B20, sondas de pH, TDS e sensor de nível), calibrando os sinais analógicos.',
+                        'Monitoramento de Vida: módulo de câmera com algoritmos de detecção de movimento para identificar se os peixes mantêm níveis normais de nado ou apresentam apatia.',
+                        'Backend em Nuvem: dados processados enviados a um banco de dados relacional e serviços em nuvem, criando um histórico contínuo da saúde do aquário.',
+                        'Painel de Controle e Alertas: interface gráfica acessível via dispositivos móveis, com alertas automáticos (webhook ou e-mail) quando parâmetros cruzarem limites de risco.'
+                    ]
+                },
+                habilidades: [
+                    { area: 'Sistemas Embarcados e IoT', desc: 'ESP32, BTT Pi, sensores analógicos/digitais e C++. Firmware de coleta, calibração matemática dos sinais de pH/TDS e envio de dados via Wi-Fi (MQTT/HTTP).' },
+                    { area: 'Software & Visão Computacional', desc: 'Python e OpenCV para processar o feed de vídeo e analisar padrões de movimentação dos peixes dentro do tanque.' },
+                    { area: 'Banco de Dados & Nuvem', desc: 'Supabase (PostgreSQL), SQL e APIs REST para estruturar tabelas e automações de backend, armazenando métricas diárias e disparando webhooks de alerta.' },
+                    { area: 'Análise de Dados e Interfaces', desc: 'Construção do frontend, conectando o banco de dados a relatórios visuais no Power BI e apps de visualização rápida para o usuário.' }
+                ]
+            }
         },
         { 
             id: 4, num: '4', titulo: 'Conversação para Acessibilidade', tipo: 'TÍTULO', dif: 'Média', viab: 40, risk: 'Médio', timeline: 'Rápido',
@@ -789,7 +892,19 @@
             pontos_fortes: ['Alinha com expertise em análise', 'Mercado real', 'Validação clara', 'Diferencial genuíno', 'Escalável', 'Full-stack'],
             pontos_fracos: ['False positive provavelmente alto', 'Comportamento varia por contexto', 'Processamento tempo real', 'Conceito drift'],
             dificuldades: ['Feature engineering', 'Limpeza de dados', 'Seleção de algoritmo', 'Adaptação do modelo'],
-            analise: 'ALTAMENTE RECOMENDADO - Mais viável que tudo. Aproveita expertise. Validação clara: detecta anomalia = funciona. TCC garantido.'
+            analise: 'ALTAMENTE RECOMENDADO - Mais viável que tudo. Aproveita expertise. Validação clara: detecta anomalia = funciona. TCC garantido.',
+            detalhes: {
+                premissas: 'A proliferação de dispositivos de Internet das Coisas (IoT) expandiu drasticamente a superfície de ataque em redes residenciais, corporativas e industriais. Devido às restrições de hardware (baixo poder de processamento e pouca memória), a maioria desses nós (sensores, atuadores, câmeras) é incapaz de executar firewalls ou antivírus robustos, tornando-se portas de entrada para invasões ou sendo sequestrados para formar botnets. Alinhado às diretrizes de segurança do NIST, este projeto parte da premissa de que a melhor forma de proteger dispositivos limitados é monitorar o ambiente em que eles operam, trazendo a detecção de anomalias para perto da fonte dos dados (Edge Computing), sem depender da nuvem.',
+                ideia_central: {
+                    texto: 'Desenvolver um Sistema de Detecção de Intrusão (IDS) embarcado em um Single-Board Computer (SBC), atuando como um sentinela passivo (ou roteador de borda) que escuta o tráfego de uma rede formada por nós IoT menores. Utilizando algoritmos de Aprendizado de Máquina Não Supervisionado executados localmente, o sistema mapeia e aprende a "assinatura de funcionamento normal" da rede — frequência de comunicação, tamanho dos pacotes e IPs de destino. Qualquer desvio estatístico desse padrão (como um sensor tentando abrir uma porta indevida ou enviando pacotes em massa) é classificado como anomalia, acionando alertas automáticos.'
+                },
+                habilidades: [
+                    { area: 'Arquitetura de Hardware e Embarcados', desc: 'Rede de testes construída com C++ em placas ESP32, com o processamento pesado de IA rodando em um SBC (BTT Pi ou Raspberry Pi).' },
+                    { area: 'Processamento de Sinais e Protocolos', desc: 'Captura de pacotes IP e decodificação de cabeçalhos — a mesma mentalidade de escutar barramentos e decodificar dados de telemetria automotiva (redes CAN/OBD-II).' },
+                    { area: 'Desenvolvimento de Software e Dados', desc: 'Extração de features da rede orquestrada via scripts em Python, armazenando logs normais e anômalos em SQL para estruturar o dataset de treinamento.' },
+                    { area: 'Automação e Visualização', desc: 'Fluxos lógicos para notificações automatizadas quando a anomalia for detectada, alimentando visões analíticas de segurança.' }
+                ]
+            }
         },
         { 
             id: 6, num: '6', titulo: 'Vazamentos de Água', tipo: 'TÍTULO', dif: 'Média', viab: 60, risk: 'Médio', timeline: 'Lento',
@@ -957,23 +1072,77 @@
     }
 
     /**
-     * Renderiza tabela de comparação
+     * Mapa de valores para ordenação
      */
-    function renderComparison() {
+    const riskMap = { 'Baixo': 1, 'Médio': 2, 'Alto': 3 };
+    const diffMap = { 'Média': 1, 'Alta': 2 };
+
+    // Ordem atualmente exibida na tabela (respeita a última ordenação aplicada)
+    let currentTableOrder = [...ideas];
+
+    // Id da ideia com a linha de detalhes expandida na tabela (apenas uma por vez)
+    let expandedTableRowId = null;
+
+    /**
+     * Monta o HTML da linha de detalhes completos (Premissas, Ideia Central, Habilidades)
+     * Reaproveita as mesmas classes visuais usadas na expansão dos cards de ideias
+     */
+    function buildTableDetailHtml(idea) {
+        const d = idea.detalhes;
+        const listaCentral = d.ideia_central.lista
+            ? `<ul class="expanded-list">${d.ideia_central.lista.map(item => `<li>▹ ${item}</li>`).join('')}</ul>`
+            : '';
+
+        return `
+            <tr class="table-detail-row">
+                <td colspan="7">
+                    <div class="table-detail-grid">
+                        <div>
+                            <div class="expanded-section">
+                                <div class="expanded-title">🎯 Premissas</div>
+                                <div class="expanded-text">${d.premissas}</div>
+                            </div>
+                            <div class="expanded-section">
+                                <div class="expanded-title">💡 Ideia Central</div>
+                                <div class="expanded-text">${d.ideia_central.texto}</div>
+                                ${listaCentral}
+                            </div>
+                        </div>
+                        <div class="expanded-section">
+                            <div class="expanded-title">🛠️ Aproveitamento de Habilidades</div>
+                            <ul class="skills-list">
+                                ${d.habilidades.map(h => `<li><strong>${h.area}</strong>${h.desc}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    /**
+     * Renderiza o corpo da tabela de comparação a partir de uma lista já ordenada,
+     * incluindo a linha de detalhes da ideia expandida (se houver)
+     */
+    function renderComparisonBody(list) {
         const tbody = document.getElementById('comparisonBody');
-        tbody.innerHTML = '';
-        
-        ideas.forEach(idea => {
+        currentTableOrder = list;
+
+        tbody.innerHTML = list.map(idea => {
             const starsDisplay = {
                 '⭐⭐⭐': '⭐⭐⭐',
                 '⭐⭐': '⭐⭐',
                 '⭐': '⭐',
                 '❌': '❌'
             }[idea.stars] || '—';
-            
-            const html = `
-                <tr>
-                    <td><strong>#${idea.num} ${idea.titulo}</strong></td>
+
+            const hasDetails = !!idea.detalhes;
+            const isOpen = expandedTableRowId === idea.id;
+            const toggleIcon = hasDetails ? `<span class="row-toggle">${isOpen ? '▾' : '▸'}</span>` : '';
+
+            let rowHtml = `
+                <tr class="${hasDetails ? 'table-row-clickable' : ''}" data-row-id="${idea.id}">
+                    <td>${toggleIcon}<strong>#${idea.num} ${idea.titulo}</strong></td>
                     <td>${idea.tipo === 'COMPLETA' ? '📋' : '💡'} ${idea.tipo}</td>
                     <td>${idea.dif}</td>
                     <td>
@@ -987,30 +1156,43 @@
                     <td><span class="stars">${starsDisplay}</span></td>
                 </tr>
             `;
-            tbody.innerHTML += html;
-        });
+
+            if (hasDetails && isOpen) {
+                rowHtml += buildTableDetailHtml(idea);
+            }
+
+            return rowHtml;
+        }).join('');
     }
 
     /**
-     * Mapa de valores para ordenação
+     * Alterna a exibição dos detalhes completos de uma ideia na tabela (accordion: só um por vez)
      */
-    const riskMap = { 'Baixo': 1, 'Médio': 2, 'Alto': 3 };
-    const diffMap = { 'Média': 1, 'Alta': 2 };
+    function toggleTableRow(ideaId) {
+        expandedTableRowId = expandedTableRowId === ideaId ? null : ideaId;
+        renderComparisonBody(currentTableOrder);
+    }
+
+    /**
+     * Renderiza tabela de comparação
+     */
+    function renderComparison() {
+        renderComparisonBody([...ideas]);
+    }
 
     /**
      * Ordena tabela por coluna
      */
     function sortTable(field) {
         const header = document.querySelector(`th[data-sort="${field}"]`);
-        const tbody = document.getElementById('comparisonBody');
-        
+
         if (currentSort.field === field) {
             currentSort.asc = !currentSort.asc;
         } else {
             currentSort.field = field;
             currentSort.asc = true;
         }
-        
+
         // Update header styles
         document.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
         if (currentSort.asc) {
@@ -1018,7 +1200,7 @@
         } else {
             header.classList.add('sort-desc');
         }
-        
+
         // Sort data
         const sorted = [...ideas].sort((a, b) => {
             let valA = a[field];
@@ -1035,56 +1217,29 @@
                 valA = parseInt(valA) || 0;
                 valB = parseInt(valB) || 0;
             }
-            
+
             // Tratar risco com mapa customizado
             if (field === 'risk') {
                 valA = riskMap[valA] || 999;
                 valB = riskMap[valB] || 999;
             }
-            
+
             // Tratar dificuldade com mapa customizado
             if (field === 'dif') {
                 valA = diffMap[valA] || 999;
                 valB = diffMap[valB] || 999;
             }
-            
+
             // Para strings normais, usar localeCompare
             if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif' && field !== 'titulo') {
                 return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             }
-            
+
             // Para valores numéricos
             return currentSort.asc ? valA - valB : valB - valA;
         });
-        
-        // Render sorted data
-        tbody.innerHTML = '';
-        sorted.forEach(idea => {
-            const starsDisplay = {
-                '⭐⭐⭐': '⭐⭐⭐',
-                '⭐⭐': '⭐⭐',
-                '⭐': '⭐',
-                '❌': '❌'
-            }[idea.stars] || '—';
-            
-            const html = `
-                <tr>
-                    <td><strong>#${idea.num} ${idea.titulo}</strong></td>
-                    <td>${idea.tipo === 'COMPLETA' ? '📋' : '💡'} ${idea.tipo}</td>
-                    <td>${idea.dif}</td>
-                    <td>
-                        <div class="bar-visual">
-                            <div class="bar"><div class="bar-fill" style="width: ${idea.viab}%"></div></div>
-                            <span>${idea.viab}%</span>
-                        </div>
-                    </td>
-                    <td>${idea.timeline}</td>
-                    <td><strong>${idea.risk}</strong></td>
-                    <td><span class="stars">${starsDisplay}</span></td>
-                </tr>
-            `;
-            tbody.innerHTML += html;
-        });
+
+        renderComparisonBody(sorted);
     }
 
     // ==================== INITIALIZATION ====================
@@ -1115,6 +1270,13 @@
             th.addEventListener('click', () => {
                 sortTable(th.dataset.sort);
             });
+        });
+
+        // Expandir/retrair detalhes completos de uma linha da tabela
+        document.getElementById('comparisonBody').addEventListener('click', (e) => {
+            const row = e.target.closest('.table-row-clickable');
+            if (!row) return;
+            toggleTableRow(parseInt(row.dataset.rowId, 10));
         });
     });
 </script>
