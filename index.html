@@ -265,6 +265,11 @@
             margin-bottom: 3rem;
         }
 
+        /* Quando todos os cards estão expandidos, iguala a altura de fundo dos cards de cada linha */
+        .ideas-container.expand-all-mode {
+            align-items: stretch;
+        }
+
         .idea-card {
             background: white;
             border: 1px solid #ddd;
@@ -449,6 +454,19 @@
             list-style: none;
             margin: 0;
             padding: 0;
+        }
+
+        /* Reserva a mesma altura por seção em todos os cards, alinhando os títulos entre si */
+        .expanded-section:nth-of-type(1) .expanded-list {
+            min-height: 150px;
+        }
+
+        .expanded-section:nth-of-type(2) .expanded-list {
+            min-height: 125px;
+        }
+
+        .expanded-section:nth-of-type(3) .expanded-list {
+            min-height: 100px;
         }
 
         .expanded-list li {
@@ -870,11 +888,14 @@
     function scrollToIdea(ideaId) {
         const element = document.getElementById(`idea-${ideaId}`);
         if (element) {
+            // Um único card expandido: cada card mantém seu próprio tamanho
+            document.getElementById('ideasGrid').classList.remove('expand-all-mode');
+
             // Fechar todos os outros
             document.querySelectorAll('.idea-expanded.show').forEach(exp => {
                 exp.classList.remove('show');
             });
-            
+
             // Abrir o selecionado
             const expanded = element.querySelector('.idea-expanded');
             expanded.classList.add('show');
@@ -889,6 +910,8 @@
         document.querySelectorAll('.idea-expanded').forEach(exp => {
             exp.classList.add('show');
         });
+        // Todos expandidos: iguala a altura de fundo dos cards de cada linha
+        document.getElementById('ideasGrid').classList.add('expand-all-mode');
     }
 
     /**
@@ -898,6 +921,7 @@
         document.querySelectorAll('.idea-expanded').forEach(exp => {
             exp.classList.remove('show');
         });
+        document.getElementById('ideasGrid').classList.remove('expand-all-mode');
     }
 
     /**
@@ -916,12 +940,15 @@
             
             const expanded = card.querySelector('.idea-expanded');
             const isOpen = expanded.classList.contains('show');
-            
+
+            // Um único card expandido: cada card mantém seu próprio tamanho
+            grid.classList.remove('expand-all-mode');
+
             // Fechar TODOS os expandidos
             document.querySelectorAll('.idea-expanded.show').forEach(exp => {
                 exp.classList.remove('show');
             });
-            
+
             // Abrir este apenas se estava fechado
             if (!isOpen) {
                 expanded.classList.add('show');
@@ -996,7 +1023,13 @@
         const sorted = [...ideas].sort((a, b) => {
             let valA = a[field];
             let valB = b[field];
-            
+
+            // Ordenar "Ideia" pelo número (#1..#8), não pelo texto do título
+            if (field === 'titulo') {
+                valA = a.id;
+                valB = b.id;
+            }
+
             // Tratar campos numéricos
             if (field === 'viab') {
                 valA = parseInt(valA) || 0;
@@ -1016,7 +1049,7 @@
             }
             
             // Para strings normais, usar localeCompare
-            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif') {
+            if (typeof a[field] === 'string' && field !== 'risk' && field !== 'dif' && field !== 'titulo') {
                 return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
             }
             
