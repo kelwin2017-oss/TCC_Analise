@@ -827,11 +827,13 @@
      * Rola até uma ideia e expande
      */
     function scrollToIdea(ideaId) {
-        const element = document.getElementById(`idea-${ideaId}`);
-        if (element) {
-            const expanded = element.querySelector('.idea-expanded');
-            expanded.classList.add('show');
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const grid = document.getElementById('ideasGrid');
+        grid.addEventListener('click', function(e) {
+            const card = e.target.closest('.idea-card');
+        if (card) {
+            card.querySelector('.idea-expanded').classList.toggle('show');
+    }
+});
         }
     }
 
