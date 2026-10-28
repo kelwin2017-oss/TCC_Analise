@@ -1,61 +1,475 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist do TCC — mudou de endereço</title>
-<meta http-equiv="refresh" content="2; url=https://claude.ai/artifact/1ZtEMNvkifK2saBV3228z2">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Checklist do Pré-Projeto Hidropônico</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #F4F7F2;
-    color: #17211B;
-    padding: 24px;
-    box-sizing: border-box;
+/* Layout: folha de conferência ABNT — cabeçalho fixo com progresso, placar por pessoa, seções na ordem do documento */
+:root {
+  --bg: #F4F7F2;
+  --surface: #FFFFFF;
+  --ink: #17211B;
+  --muted: #5A695F;
+  --line: #D9E2DA;
+  --accent: #22704E;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E0EFE6;
+  --req: #8A4A10;
+  --req-soft: #F6EADB;
+  --f-display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1411; --surface: #161F19; --ink: #E5EDE7; --muted: #98A99E; --line: #283830;
+    --accent: #5CC28F; --accent-ink: #0F1411; --accent-soft: #1C3227; --req: #E6AE6C; --req-soft: #3A2A17;
+    color-scheme: dark;
   }
-  @media (prefers-color-scheme: dark) {
-    body { background: #0F1411; color: #E5EDE7; }
-    .card { background: #161F19 !important; border-color: #283830 !important; }
-    .muted { color: #98A99E !important; }
-    a.btn { background: #5CC28F !important; color: #0F1411 !important; }
-  }
-  .card {
-    max-width: 440px;
-    width: 100%;
-    background: #FFFFFF;
-    border: 1px solid #D9E2DA;
-    border-radius: 14px;
-    padding: 28px 24px;
-    text-align: center;
-  }
-  h1 { font-size: 1.1rem; margin: 0 0 10px; }
-  p { margin: 0 0 20px; color: #5A695F; font-size: 0.92rem; line-height: 1.5; }
-  .muted { color: #5A695F; }
-  a.btn {
-    display: inline-block;
-    background: #22704E;
-    color: #FFFFFF;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.92rem;
-    padding: 10px 20px;
-    border-radius: 8px;
-  }
-  .url { margin-top: 16px; font-size: 0.76rem; word-break: break-all; }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1411; --surface: #161F19; --ink: #E5EDE7; --muted: #98A99E; --line: #283830;
+  --accent: #5CC28F; --accent-ink: #0F1411; --accent-soft: #1C3227; --req: #E6AE6C; --req-soft: #3A2A17;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { padding-block: 14px 12px; display: grid; gap: 10px; }
+.titlerow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+h1 { margin: 0; font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
+.status { font-size: 0.78rem; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.status[data-mode="shared"] .dot { background: var(--accent); }
+.status[data-mode="readonly"] .dot, .status[data-mode="local"] .dot { background: var(--req); }
+.prog { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+.bar { height: 8px; border-radius: 4px; background: var(--accent-soft); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+.count { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.9rem; }
+.count small { color: var(--muted); font-weight: 400; }
+
+.notice { margin: 14px auto 0; font-size: 0.85rem; color: var(--ink); background: var(--req-soft); border-radius: 8px; padding: 10px 12px; }
+
+.people { margin-top: 18px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.person { appearance: none; text-align: left; font: inherit; color: inherit; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 10px 9px; display: grid; gap: 6px; min-width: 0; }
+.person:hover { border-color: var(--accent); }
+.person[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.person .pn { font-weight: 600; font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person .pc { font-variant-numeric: tabular-nums; font-size: 0.8rem; color: var(--muted); }
+.person .bar { height: 4px; }
+@media (max-width: 560px) { .people { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.filters { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 0.85rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { appearance: none; border: 0; background: transparent; font: inherit; color: var(--muted); padding: 6px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.flabel { color: var(--muted); }
+.toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+.clear { appearance: none; border: 0; background: none; font: inherit; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+
+main.wrap { padding-block: 8px 48px; display: grid; gap: 26px; margin-top: 14px; }
+.sec h2 { margin: 0 0 2px; font-family: var(--f-display); font-size: 1.02rem; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.sec h2 .sc { font-family: var(--f-mono); font-size: 0.74rem; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sec .snote { margin: 0 0 10px; color: var(--muted); font-size: 0.84rem; }
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+
+.item { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 14px; cursor: pointer; border-top: 1px solid var(--line); }
+.item.first { border-top: 0; }
+.item:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.item input { appearance: none; margin: 2px 0 0; width: 20px; height: 20px; border: 1.5px solid var(--muted); border-radius: 5px; background: var(--surface); cursor: pointer; display: grid; place-content: center; flex: none; }
+.item input::after { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--accent-ink); border-bottom: 2px solid var(--accent-ink); transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+.item input:checked { background: var(--accent); border-color: var(--accent); }
+.item input:checked::after { opacity: 1; }
+.item input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.item input:disabled { cursor: not-allowed; opacity: .6; }
+.item .body { min-width: 0; display: grid; gap: 3px; }
+.item .t { font-weight: 600; }
+.item.done .t { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
+.item .d { color: var(--muted); font-size: 0.86rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 3px; }
+.chip { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.03em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.obr { background: var(--req-soft); color: var(--req); border-color: transparent; }
+.chip.who { color: var(--ink); }
+.by { font-size: 0.76rem; color: var(--accent); }
+.empty { padding: 18px; color: var(--muted); font-size: 0.88rem; }
+
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
 </style>
-</head>
-<body>
-  <div class="card">
-    <h1>Esta checklist mudou de endereço</h1>
-    <p>Agora ela é compartilhada em tempo real entre o grupo (não fica mais salva só no navegador de cada um). Você vai ser redirecionado em instantes — se não for, use o botão abaixo.</p>
-    <a class="btn" href="https://claude.ai/artifact/1ZtEMNvkifK2saBV3228z2">Abrir o checklist</a>
-    <p class="url muted">https://claude.ai/artifact/1ZtEMNvkifK2saBV3228z2</p>
+
+<header class="top">
+  <div class="wrap">
+    <div class="titlerow">
+      <div>
+        <h1>Checklist do Pré-Projeto</h1>
+        <p class="sub">Cultivo Hidropônico Residencial · Engenharia da Computação · FMU · Modelo de artigo e Manual do Pré-PFCE</p>
+      </div>
+      <span class="status" id="status" data-mode="connecting"><span class="dot"></span><span id="statusText">Conectando…</span></span>
+    </div>
+    <div class="prog">
+      <div class="bar" aria-hidden="true"><i id="barAll"></i></div>
+      <div class="count" id="countAll">0 <small>de 0</small></div>
+    </div>
   </div>
-</body>
-</html>
+</header>
+
+<div class="wrap"><p class="notice" id="notice" hidden></p></div>
+
+<section class="wrap people" id="people" aria-label="Progresso por responsável"></section>
+
+<div class="wrap filters">
+  <span class="flabel">Mostrar</span>
+  <div class="seg" id="segTipo">
+    <button type="button" id="tp-all" data-v="all" aria-pressed="true">Todos os itens</button>
+    <button type="button" id="tp-obr" data-v="obr" aria-pressed="false">Só obrigatórios</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="hideDone"> Ocultar concluídos</label>
+  <button type="button" class="clear" id="clearPerson" hidden>Mostrar todos os responsáveis</button>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<script>
+(function () {
+  "use strict";
+  const PEOPLE = ["Grupo", "Emily", "Henrique", "Matheus", "Kelwin"];
+  const REQ = { obr: "Obrigatório", rec: "Recomendado" };
+
+  const SECTIONS = [
+    { id: "inicio", title: "Antes de começar", note: "Dúvidas para tirar com o professor antes de formatar.", items: [
+      { id: "conf-citacao", t: "Confirmar o estilo de citação", d: "O modelo usa números entre colchetes [1] (padrão IEEE); o manual fala em ABNT. Confirmar qual vale antes de escrever as referências.", req: "obr", who: "Grupo" },
+      { id: "conf-apresentacao", t: "Confirmar se há apresentação oral", d: "O manual diz que não há apresentação pública, mas o cronograma de aulas marca “Apresentação Pré-Projeto (N2)” em 30/11.", req: "obr", who: "Grupo" },
+      { id: "conf-texto", t: "Escrever o texto à parte antes de aplicar o modelo", d: "O modelo pede o conteúdo pronto e revisado antes de colar e aplicar os estilos.", req: "rec", who: "Grupo" }
+    ]},
+    { id: "primeira", title: "Primeira página", note: "No modelo de artigo não há capa, folha de rosto, listas nem sumário: o artigo abre com estes elementos.", items: [
+      { id: "titulo", t: "Título do artigo", d: "Escolher entre as duas opções do grupo. Sem símbolos, fórmulas, siglas ou notas de rodapé.", req: "obr", who: "Grupo" },
+      { id: "autores", t: "Autores e afiliações", d: "Um bloco por integrante: nome, Engenharia da Computação, FMU, São Paulo, Brasil, e-mail ou ORCID.", req: "obr", who: "Grupo" },
+      { id: "resumo", t: "Resumo", d: "Parágrafo único, sem símbolos nem fórmulas: contexto, objetivo, método, resultados esperados e conclusão. Escrito por último.", req: "obr", who: "Grupo" },
+      { id: "palavras-chave", t: "Palavras-chave", d: "De 3 a 5 termos, como Hidroponia; Cultivo residencial; Internet das Coisas; Sistemas embarcados.", req: "obr", who: "Grupo" },
+      { id: "financiamento", t: "Remover a caixa de agência de financiamento", d: "O modelo traz essa caixa; sem financiamento, ela sai.", req: "rec", who: "Grupo" }
+    ]},
+    { id: "intro", title: "I. Introdução", note: "Subitens obrigatórios do Anexo II do manual, nesta ordem.", items: [
+      { id: "intro-tema", t: "Definição do tema de pesquisa", d: "Estrutura hidropônica modular para cultivo residencial com monitoramento remoto.", req: "obr", who: "Emily" },
+      { id: "intro-cenario", t: "Apresentação do cenário do tema", d: "Agricultura urbana, espaços compactos, consumo de água e hidroponia como hobby (resumo do antigo capítulo 2).", req: "obr", who: "Emily" },
+      { id: "intro-problema", t: "Apresentação da problemática", d: "Problema de pesquisa, hipótese e questões norteadoras; dependência de manutenção diária e o “problema da viagem”.", req: "obr", who: "Emily", rub: "1.1" },
+      { id: "intro-objetivos", t: "Delimitação da pesquisa e definição dos objetivos", d: "Escopo do pré-projeto e do projeto final; objetivo geral e específicos, sem a etapa de impressão 3D.", req: "obr", who: "Emily" },
+      { id: "intro-relevancia", t: "Apresentação da relevância do tema", d: "Justificativa técnica, social, econômica e acadêmica; ligação com os ODS 2, 6, 11 e 12.", req: "obr", who: "Emily" },
+      { id: "intro-linhas", t: "Alinhamento às linhas institucionais", d: "Pesquisa: Sistemas Embarcados e Automação; Computação em Nuvem, Redes e IoT. Extensão: Sustentabilidade e Meio Ambiente (Produção e Consumo Sustentáveis).", req: "obr", who: "Emily" },
+      { id: "intro-normas", t: "Utilização das normas técnicas", d: "Dizer quais normas o trabalho segue: o modelo de artigo e o padrão de citação confirmado.", req: "obr", who: "Emily" }
+    ]},
+    { id: "metodo", title: "II. Método de pesquisa", note: "Vem antes do referencial teórico, como pede o manual.", items: [
+      { id: "met-tipo", t: "Tipo de investigação", d: "Pesquisa aplicada, quali-quantitativa, exploratória e explicativa; bibliográfica e experimental com desenvolvimento de protótipo.", req: "obr", who: "Kelwin", rub: "2.4" },
+      { id: "met-estrutura", t: "Desenvolvimento proposto: estrutura física e hidráulica", d: "Requisitos, alternativas e escolha do formato, materiais, dimensionamento da bomba e do reservatório com equações numeradas, modos de falha.", req: "rec", who: "Matheus", rub: "2.1" },
+      { id: "met-arquitetura", t: "Desenvolvimento proposto: arquitetura de hardware e sistema", d: "Diagrama sensores → ESP32 → Wi-Fi/MQTT → Raspberry Pi → banco de dados → dashboard e alertas; lógica dos alertas e do acionamento da bomba.", req: "rec", who: "Matheus", rub: "3.1 a 3.3" },
+      { id: "met-figura", t: "Figura da estrutura", d: "Esboço ou desenho CAD da estrutura, com legenda “Fig. n” embaixo.", req: "rec", who: "Matheus", rub: "2.3" },
+      { id: "met-coleta", t: "Estratégia de coleta de dados", d: "Comparação com um sistema horizontal de referência, variáveis e indicadores, instrumentos, calibração, protocolo de medição e teste de autonomia.", req: "obr", who: "Kelwin", rub: "2.2" },
+      { id: "met-analise", t: "Estratégia de análise de dados", d: "Estatística descritiva, séries temporais, comparação entre os sistemas; ferramentas como Python, SQL e Power BI.", req: "obr", who: "Kelwin", rub: "2.7" }
+    ]},
+    { id: "referencial", title: "III. Referencial teórico", note: "Cada tema precisa se ligar ao problema e aos objetivos.", items: [
+      { id: "ref-hidroponia", t: "Fundamentos e tipos de hidroponia", d: "Histórico curto, classificações, quadro dos tipos de sistema e justificativa da técnica escolhida.", req: "obr", who: "Henrique" },
+      { id: "ref-plantas", t: "Plantas cultivadas", d: "Classificação das culturas, tabela de parâmetros e culturas escolhidas para o protótipo.", req: "obr", who: "Henrique" },
+      { id: "ref-nutricao", t: "Nutrição e solução nutritiva", d: "pH, condutividade elétrica, temperatura, oxigênio dissolvido e faixas-alvo que serão monitoradas.", req: "obr", who: "Henrique" },
+      { id: "ref-iot", t: "IoT e sistemas embarcados", d: "ESP32, Raspberry Pi, sensores de nível, fluxo, pH e CE, protocolo MQTT. Base teórica para a arquitetura proposta.", req: "obr", who: "Matheus" },
+      { id: "ref-fontes", t: "Investigação das fontes científicas", d: "Bases consultadas (Google Acadêmico, CAPES, SciELO, IEEE, Embrapa), termos de busca e critérios de seleção.", req: "obr", who: "Kelwin", rub: "2.4" },
+      { id: "ref-estado-arte", t: "Estado da arte", d: "Quadro comparativo dos trabalhos relacionados e a lacuna que o projeto preenche.", req: "obr", who: "Kelwin", rub: "2.9" }
+    ]},
+    { id: "cronograma", title: "IV. Cronograma", note: "A rubrica 3.4 cobra dependências coerentes entre as atividades.", items: [
+      { id: "cron-atividades", t: "Atividades até a conclusão do projeto", d: "Do pré-projeto até a entrega do projeto final: montagem, cultivo, automação, testes e redação.", req: "obr", who: "Kelwin" },
+      { id: "cron-tempo", t: "Tempo de execução das atividades", d: "Duração e ordem de cada atividade; nada começa antes daquilo de que depende.", req: "obr", who: "Kelwin", rub: "3.4" },
+      { id: "cron-controle", t: "Monitoramento e controle das atividades", d: "Como o grupo acompanha o andamento: este checklist, quadro de tarefas, reuniões semanais e marcos de revisão.", req: "obr", who: "Kelwin", rub: "1.3" },
+      { id: "cron-orcamento", t: "Orçamento estimado", d: "Materiais e componentes com custo, comparado a produtos comerciais (viabilidade econômica).", req: "rec", who: "Matheus", rub: "2.6 e 2.8" }
+    ]},
+    { id: "consideracoes", title: "V. Prévia das considerações finais", items: [
+      { id: "cons-previa", t: "Primeiras considerações da investigação", d: "O que a pesquisa inicial já mostrou: técnica e culturas escolhidas, lacuna encontrada, viabilidade.", req: "obr", who: "Emily" },
+      { id: "cons-proximos", t: "Próximos passos do projeto final", d: "Montagem, cultivo, automação e testes previstos; resultados que se espera medir.", req: "rec", who: "Emily" }
+    ]},
+    { id: "referencias", title: "VI. Referências", items: [
+      { id: "refs-lista", t: "Lista de referências", d: "Todas as fontes citadas, no estilo confirmado com o professor.", req: "obr", who: "Grupo" },
+      { id: "refs-cruzar", t: "Citações e referências batem", d: "Toda citação está na lista e toda referência da lista é citada no texto.", req: "obr", who: "Grupo" },
+      { id: "refs-plagio", t: "Fonte citada em todo trecho baseado em outro autor", d: "Paráfrase com fonte; ideia sem fonte também conta como plágio, e plágio reprova.", req: "obr", who: "Grupo", rub: "4.4" }
+    ]},
+    { id: "rubrica", title: "Pontos da rubrica", note: "Peso da nota: competências gerais 10%, vertical STEAM 20%, específicas do curso 40%, estrutura 30%.", items: [
+      { id: "rub-exatas", t: "Equações, tabelas e fluxogramas", d: "Fórmulas da bomba e da autonomia, tabela de parâmetros, fluxograma da automação.", req: "rec", who: "Grupo", rub: "2.1" },
+      { id: "rub-socioambiental", t: "Ética e responsabilidade socioambiental", d: "Economia de água, ODS, descarte da solução nutritiva, segurança elétrica e dados dos usuários.", req: "rec", who: "Grupo", rub: "2.5" },
+      { id: "rub-estrategia", t: "Visão estratégica", d: "Tendências de mercado de hortas inteligentes e viabilidade técnica e econômica.", req: "rec", who: "Grupo", rub: "2.8" },
+      { id: "rub-inovacao", t: "Diferencial do projeto em destaque", d: "Reserva passiva com alertas de nível e fluxo para resolver a falta de autonomia.", req: "rec", who: "Grupo", rub: "2.9" },
+      { id: "rub-equipe", t: "Divisão do trabalho registrada", d: "Objetivos individuais e do grupo claros, com acompanhamento das entregas.", req: "rec", who: "Grupo", rub: "1.2 e 1.3" },
+      { id: "rub-portugues", t: "Revisão de português", d: "Pontuação, concordância, ortografia e linguagem técnica.", req: "obr", who: "Grupo", rub: "4.2" }
+    ]},
+    { id: "formatacao", title: "Formatação do modelo", note: "Revisar antes da entrega.", items: [
+      { id: "fmt-estilos", t: "Estilos do modelo aplicados", d: "Sem alterar margens, colunas, espaçamento ou fontes do modelo.", req: "obr", who: "Grupo", rub: "4.1" },
+      { id: "fmt-titulos", t: "Títulos das seções", d: "Seções em algarismos romanos (I., II.) e subseções com letras (A., B.), aplicados pelo estilo, sem numerar à mão.", req: "obr", who: "Grupo" },
+      { id: "fmt-figuras", t: "Figuras e tabelas", d: "Figura com legenda embaixo (“Fig. 1”); tabela com título em cima; ambas citadas no texto antes de aparecer.", req: "obr", who: "Grupo" },
+      { id: "fmt-equacoes", t: "Equações", d: "Numeradas como (1) à direita, com os símbolos definidos logo depois.", req: "obr", who: "Grupo" },
+      { id: "fmt-unidades", t: "Unidades e siglas", d: "Unidades no SI; siglas definidas no primeiro uso; nenhuma sigla no título.", req: "obr", who: "Grupo" },
+      { id: "fmt-paginacao", t: "Sem paginação", d: "O modelo pede para não numerar as páginas.", req: "obr", who: "Grupo" }
+    ]},
+    { id: "entrega", title: "Entrega", items: [
+      { id: "entrega-pdf", t: "Postar um único PDF de até 5 MB no AVA", d: "Entrega única na N2 (30/11), dentro do prazo do Ambiente Acadêmico.", req: "obr", who: "Grupo" }
+    ]}
+  ];
+
+  const ALL = [];
+  SECTIONS.forEach(s => s.items.forEach(it => { it.sec = s.id; ALL.push(it); }));
+
+  // ---- state ----
+  let checks = {};            // id -> {done, by, at}
+  let mode = "connecting";    // connecting | shared | readonly | local
+  let db = null, user = null, uid = null;
+  let names = {};
+  const filt = { tipo: "all", person: null, hideDone: false };
+  const writing = {}, pending = {};
+  const LS_CHECKS = "tcc-preprojeto-local";
+  const LS_FILT = "tcc-preprojeto-filters";
+
+  try { const f = JSON.parse(localStorage.getItem(LS_FILT) || "null"); if (f) Object.assign(filt, f); } catch (e) {}
+  function saveFilt() { try { localStorage.setItem(LS_FILT, JSON.stringify(filt)); } catch (e) {} }
+
+  // ---- build DOM once ----
+  const main = document.getElementById("main");
+  const rows = {};
+  const secEls = {};
+  SECTIONS.forEach(s => {
+    const sec = document.createElement("section");
+    sec.className = "sec";
+    const h = document.createElement("h2");
+    const ht = document.createElement("span"); ht.textContent = s.title;
+    const sc = document.createElement("span"); sc.className = "sc";
+    h.append(ht, sc);
+    sec.append(h);
+    if (s.note) { const p = document.createElement("p"); p.className = "snote"; p.textContent = s.note; sec.append(p); }
+    const list = document.createElement("div"); list.className = "list";
+    const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "Nenhum item com os filtros atuais."; empty.hidden = true;
+    s.items.forEach(it => {
+      const lab = document.createElement("label");
+      lab.className = "item";
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.id = "cb-" + it.id; cb.disabled = true;
+      cb.addEventListener("change", () => toggle(it.id, cb.checked));
+      const body = document.createElement("div"); body.className = "body";
+      const t = document.createElement("div"); t.className = "t"; t.textContent = it.t;
+      const d = document.createElement("div"); d.className = "d"; d.textContent = it.d;
+      const meta = document.createElement("div"); meta.className = "meta";
+      const c1 = document.createElement("span"); c1.className = "chip " + it.req; c1.textContent = REQ[it.req];
+      const by = document.createElement("span"); by.className = "by";
+      if (it.rub) {
+        const c2 = document.createElement("span"); c2.className = "chip"; c2.textContent = "Rubrica " + it.rub;
+        const c3 = document.createElement("span"); c3.className = "chip who"; c3.textContent = it.who;
+        meta.append(c1, c2, c3, by);
+      } else {
+        const c3 = document.createElement("span"); c3.className = "chip who"; c3.textContent = it.who;
+        meta.append(c1, c3, by);
+      }
+      body.append(t, d, meta);
+      lab.append(cb, body);
+      list.append(lab);
+      rows[it.id] = { lab, cb, by, it };
+    });
+    list.append(empty);
+    sec.append(list);
+    main.append(sec);
+    secEls[s.id] = { sec, sc, empty, list };
+  });
+
+  const peopleEl = document.getElementById("people");
+  const personEls = {};
+  PEOPLE.forEach(p => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "person"; b.id = "person-" + p;
+    b.setAttribute("aria-pressed", "false");
+    const pn = document.createElement("span"); pn.className = "pn"; pn.textContent = p;
+    const pc = document.createElement("span"); pc.className = "pc";
+    const bar = document.createElement("div"); bar.className = "bar"; const bi = document.createElement("i"); bar.append(bi);
+    b.append(pn, pc, bar);
+    b.addEventListener("click", () => { filt.person = filt.person === p ? null : p; saveFilt(); applyFilters(); });
+    peopleEl.append(b);
+    personEls[p] = { b, pc, bi };
+  });
+
+  document.querySelectorAll("#segTipo button").forEach(btn => {
+    btn.addEventListener("click", () => { filt.tipo = btn.dataset.v; saveFilt(); applyFilters(); });
+  });
+  const hideDone = document.getElementById("hideDone");
+  hideDone.addEventListener("change", () => { filt.hideDone = hideDone.checked; saveFilt(); applyFilters(); });
+  document.getElementById("clearPerson").addEventListener("click", () => { filt.person = null; saveFilt(); applyFilters(); });
+
+  // ---- render ----
+  function isDone(id) { return !!(checks[id] && checks[id].done); }
+  function passesTipo(it) { return filt.tipo === "all" || it.req === "obr"; }
+
+  function fmtDate(iso) {
+    try { return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }); } catch (e) { return ""; }
+  }
+
+  function paintRows() {
+    ALL.forEach(it => {
+      const r = rows[it.id];
+      const c = checks[it.id];
+      const done = isDone(it.id);
+      r.cb.checked = done;
+      r.lab.classList.toggle("done", done);
+      r.cb.disabled = !(mode === "shared" || mode === "local");
+      if (done && c) {
+        const who = c.by && mode !== "local" ? ((names[c.by] && names[c.by].name) || "alguém do grupo") : null;
+        const when = c.at ? fmtDate(c.at) : "";
+        r.by.textContent = "Concluído" + (who ? " por " + who : "") + (when ? " · " + when : "");
+      } else {
+        r.by.textContent = "";
+      }
+    });
+    paintStats();
+    applyFilters();
+  }
+
+  function paintStats() {
+    const scope = ALL.filter(passesTipo);
+    const doneN = scope.filter(it => isDone(it.id)).length;
+    const pct = scope.length ? Math.round(doneN / scope.length * 100) : 0;
+    document.getElementById("barAll").style.width = pct + "%";
+    const ca = document.getElementById("countAll");
+    ca.textContent = doneN + " ";
+    const sm = document.createElement("small"); sm.textContent = "de " + scope.length + " · " + pct + "%";
+    ca.append(sm);
+    PEOPLE.forEach(p => {
+      const mine = scope.filter(it => it.who === p);
+      const d = mine.filter(it => isDone(it.id)).length;
+      personEls[p].pc.textContent = d + " de " + mine.length;
+      personEls[p].bi.style.width = (mine.length ? Math.round(d / mine.length * 100) : 0) + "%";
+    });
+    SECTIONS.forEach(s => {
+      const its = s.items.filter(passesTipo);
+      const d = its.filter(it => isDone(it.id)).length;
+      secEls[s.id].sc.textContent = d + "/" + its.length;
+    });
+  }
+
+  function applyFilters() {
+    document.querySelectorAll("#segTipo button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === filt.tipo)));
+    hideDone.checked = !!filt.hideDone;
+    PEOPLE.forEach(p => personEls[p].b.setAttribute("aria-pressed", String(filt.person === p)));
+    document.getElementById("clearPerson").hidden = !filt.person;
+    SECTIONS.forEach(s => {
+      let visible = 0, first = true;
+      s.items.forEach(it => {
+        const show = passesTipo(it) && (!filt.person || it.who === filt.person) && !(filt.hideDone && isDone(it.id));
+        rows[it.id].lab.hidden = !show;
+        rows[it.id].lab.classList.toggle("first", show && first);
+        if (show) { visible++; first = false; }
+      });
+      secEls[s.id].empty.hidden = visible > 0;
+      secEls[s.id].sec.hidden = visible === 0 && (filt.person !== null);
+    });
+    paintStats();
+  }
+
+  function setMode(m, msg) {
+    mode = m;
+    const st = document.getElementById("status");
+    st.dataset.mode = m;
+    document.getElementById("statusText").textContent =
+      m === "shared" ? "Compartilhado com o grupo" :
+      m === "readonly" ? "Somente leitura" :
+      m === "local" ? "Salvo só neste navegador" : "Conectando…";
+    const n = document.getElementById("notice");
+    n.hidden = !msg;
+    n.textContent = msg || "";
+    paintRows();
+  }
+
+  // ---- names ----
+  async function resolveNames() {
+    if (!user) return;
+    const ids = [...new Set(Object.values(checks).map(c => c && c.by).filter(Boolean))];
+    if (!ids.length) return;
+    try { names = await user.profiles(ids); } catch (e) {}
+    paintRows();
+  }
+
+  // ---- writes ----
+  function toggle(id, val) {
+    if (mode !== "shared" && mode !== "local") return;
+    checks[id] = { done: val, by: uid || null, at: new Date().toISOString() };
+    paintRows();
+    if (mode === "local") {
+      try { localStorage.setItem(LS_CHECKS, JSON.stringify(checks)); } catch (e) {}
+      return;
+    }
+    write(id, 0);
+  }
+
+  async function write(id, attempt) {
+    if (writing[id]) { pending[id] = true; return; }
+    writing[id] = true;
+    const c = checks[id];
+    try {
+      await db.doc("checks/" + id).set({ done: !!c.done, by: c.by || null, at: c.at });
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "invalid_argument" || code === "not_granted") {
+        setMode("readonly", "Você não tem permissão para marcar itens nesta página. Peça ao dono do checklist para convidar você como editor.");
+      } else if (code === "unavailable" && attempt === 0) {
+        writing[id] = false;
+        setTimeout(() => write(id, 1), 600 + Math.random() * 800);
+        return;
+      } else if (code === "quota_exceeded") {
+        showNotice("O armazenamento desta página está cheio. A marcação não foi salva.");
+      } else {
+        showNotice("Não foi possível salvar a marcação agora. Tente de novo em instantes.");
+      }
+    } finally {
+      writing[id] = false;
+      if (pending[id] && mode === "shared") { pending[id] = false; write(id, 0); }
+    }
+  }
+
+  function showNotice(t) { const n = document.getElementById("notice"); n.textContent = t; n.hidden = false; }
+
+  // ---- init ----
+  function startLocal(msg) {
+    try { checks = JSON.parse(localStorage.getItem(LS_CHECKS) || "{}") || {}; } catch (e) { checks = {}; }
+    setMode("local", msg);
+  }
+
+  applyFilters();
+  paintRows();
+
+  const C = window.claude;
+  if (!C || typeof C.use !== "function") {
+    startLocal("Esta cópia não está conectada ao armazenamento compartilhado: as marcações ficam só neste navegador.");
+    return;
+  }
+  (async () => {
+    try { user = await C.use("user"); } catch (e) { user = null; }
+    try { db = await C.use("db"); } catch (e) { db = null; }
+    if (!db) {
+      startLocal("Entre na sua conta Claude para ver e marcar o progresso do grupo. Por enquanto, as marcações ficam só neste navegador.");
+      return;
+    }
+    try { uid = user ? await user.id() : null; } catch (e) { uid = null; }
+    let canWrite = null;
+    try { canWrite = user ? await user.can("data.write") : null; } catch (e) { canWrite = null; }
+    if (canWrite === false) setMode("readonly", "Você está vendo o progresso do grupo. Para marcar itens, peça ao dono do checklist para convidar você como editor.");
+    else setMode("shared");
+    db.collection("checks").onSnapshot(snap => {
+      const next = {};
+      snap.docs.forEach(d => { if (d.exists) next[d.id] = d.data(); });
+      // keep this view's own in-flight values
+      Object.keys(writing).forEach(id => { if (writing[id] && checks[id]) next[id] = checks[id]; });
+      checks = next;
+      paintRows();
+      resolveNames();
+    }, err => {
+      showNotice("A conexão com o progresso do grupo caiu. Recarregue a página para continuar.");
+    });
+  })();
+})();
+</script>
+
+</body></html>
