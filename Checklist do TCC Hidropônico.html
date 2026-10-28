@@ -1,0 +1,457 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Checklist do TCC Hidropônico</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: folha de conferência ABNT — cabeçalho fixo com progresso, placar por pessoa, seções na ordem do documento */
+:root {
+  --bg: #F4F7F2;
+  --surface: #FFFFFF;
+  --ink: #17211B;
+  --muted: #5A695F;
+  --line: #D9E2DA;
+  --accent: #22704E;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E0EFE6;
+  --req: #8A4A10;
+  --req-soft: #F6EADB;
+  --f-display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1411; --surface: #161F19; --ink: #E5EDE7; --muted: #98A99E; --line: #283830;
+    --accent: #5CC28F; --accent-ink: #0F1411; --accent-soft: #1C3227; --req: #E6AE6C; --req-soft: #3A2A17;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1411; --surface: #161F19; --ink: #E5EDE7; --muted: #98A99E; --line: #283830;
+  --accent: #5CC28F; --accent-ink: #0F1411; --accent-soft: #1C3227; --req: #E6AE6C; --req-soft: #3A2A17;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { padding-block: 14px 12px; display: grid; gap: 10px; }
+.titlerow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+h1 { margin: 0; font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { margin: 2px 0 0; color: var(--muted); font-size: 0.85rem; }
+.status { font-size: 0.78rem; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.status[data-mode="shared"] .dot { background: var(--accent); }
+.status[data-mode="readonly"] .dot, .status[data-mode="local"] .dot { background: var(--req); }
+.prog { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+.bar { height: 8px; border-radius: 4px; background: var(--accent-soft); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+.count { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.9rem; }
+.count small { color: var(--muted); font-weight: 400; }
+
+.notice { margin: 14px auto 0; font-size: 0.85rem; color: var(--ink); background: var(--req-soft); border-radius: 8px; padding: 10px 12px; }
+
+.people { margin-top: 18px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.person { appearance: none; text-align: left; font: inherit; color: inherit; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 10px 9px; display: grid; gap: 6px; min-width: 0; }
+.person:hover { border-color: var(--accent); }
+.person[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.person .pn { font-weight: 600; font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person .pc { font-variant-numeric: tabular-nums; font-size: 0.8rem; color: var(--muted); }
+.person .bar { height: 4px; }
+@media (max-width: 560px) { .people { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.filters { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 0.85rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { appearance: none; border: 0; background: transparent; font: inherit; color: var(--muted); padding: 6px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.flabel { color: var(--muted); }
+.toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink); }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+.clear { appearance: none; border: 0; background: none; font: inherit; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+
+main.wrap { padding-block: 8px 48px; display: grid; gap: 26px; margin-top: 14px; }
+.sec h2 { margin: 0 0 2px; font-family: var(--f-display); font-size: 1.02rem; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.sec h2 .sc { font-family: var(--f-mono); font-size: 0.74rem; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sec .snote { margin: 0 0 10px; color: var(--muted); font-size: 0.84rem; }
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+
+.item { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 14px; cursor: pointer; border-top: 1px solid var(--line); }
+.item.first { border-top: 0; }
+.item:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.item input { appearance: none; margin: 2px 0 0; width: 20px; height: 20px; border: 1.5px solid var(--muted); border-radius: 5px; background: var(--surface); cursor: pointer; display: grid; place-content: center; flex: none; }
+.item input::after { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--accent-ink); border-bottom: 2px solid var(--accent-ink); transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+.item input:checked { background: var(--accent); border-color: var(--accent); }
+.item input:checked::after { opacity: 1; }
+.item input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.item input:disabled { cursor: not-allowed; opacity: .6; }
+.item .body { min-width: 0; display: grid; gap: 3px; }
+.item .t { font-weight: 600; }
+.item.done .t { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
+.item .d { color: var(--muted); font-size: 0.86rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 3px; }
+.chip { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.03em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.obr { background: var(--req-soft); color: var(--req); border-color: transparent; }
+.chip.who { color: var(--ink); }
+.by { font-size: 0.76rem; color: var(--accent); }
+.empty { padding: 18px; color: var(--muted); font-size: 0.88rem; }
+
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="titlerow">
+      <div>
+        <h1>Checklist do TCC</h1>
+        <p class="sub">Cultivo Hidropônico Residencial · Engenharia da Computação · ABNT NBR 14724 e 15287</p>
+      </div>
+      <span class="status" id="status" data-mode="connecting"><span class="dot"></span><span id="statusText">Conectando…</span></span>
+    </div>
+    <div class="prog">
+      <div class="bar" aria-hidden="true"><i id="barAll"></i></div>
+      <div class="count" id="countAll">0 <small>de 0</small></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap"><p class="notice" id="notice" hidden></p></div>
+
+<section class="wrap people" id="people" aria-label="Progresso por responsável"></section>
+
+<div class="wrap filters">
+  <span class="flabel">Etapa</span>
+  <div class="seg" id="segEtapa">
+    <button type="button" id="et-all" data-v="all" aria-pressed="true">Todas</button>
+    <button type="button" id="et-1" data-v="1" aria-pressed="false">Etapa 1</button>
+    <button type="button" id="et-2" data-v="2" aria-pressed="false">Etapa 2</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="hideDone"> Ocultar concluídos</label>
+  <button type="button" class="clear" id="clearPerson" hidden>Mostrar todos os responsáveis</button>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<script>
+(function () {
+  "use strict";
+  const PEOPLE = ["Grupo", "Emily", "Henrique", "Matheus", "Kelwin"];
+  const REQ = { obr: "Obrigatório", rec: "Recomendado", opc: "Opcional" };
+  const ETAPA = { "1": "Etapa 1", "2": "Etapa 2", "12": "Etapas 1 e 2" };
+
+  const SECTIONS = [
+    { id: "inicio", title: "Antes de começar", note: "Duas confirmações que mudam a estrutura do trabalho.", items: [
+      { id: "conf-formato", t: "Confirmar com o professor: monografia ou artigo", d: "Artigo científico (NBR 6022) não tem capa nem folha de rosto: título, autores e resumo vão na primeira página.", req: "obr", e: "1", who: "Grupo" },
+      { id: "conf-modelo", t: "Pedir o modelo de normalização da FMU", d: "O manual ou template da faculdade pode mudar detalhes, como o texto da folha de rosto.", req: "obr", e: "1", who: "Grupo" }
+    ]},
+    { id: "externa", title: "Parte externa", items: [
+      { id: "capa", t: "Capa", d: "Instituição, curso, autores, título, subtítulo (se houver), cidade e ano.", req: "obr", e: "1", who: "Grupo" },
+      { id: "lombada", t: "Lombada", d: "Só se a versão final for encadernada em capa dura.", req: "opc", e: "2", who: "Grupo" }
+    ]},
+    { id: "pre", title: "Elementos pré-textuais", note: "Nesta ordem, antes da Introdução. As páginas contam a partir da folha de rosto, mas não recebem número.", items: [
+      { id: "folha-rosto", t: "Folha de rosto (contracapa)", d: "Autores, título, natureza do trabalho (“Trabalho de Conclusão de Curso apresentado ao curso de Engenharia da Computação da FMU…”), orientador, cidade e ano.", req: "obr", e: "1", who: "Grupo" },
+      { id: "ficha", t: "Ficha catalográfica", d: "No verso da folha de rosto, só na versão final. Feita pela biblioteca.", req: "obr", e: "2", who: "Grupo" },
+      { id: "errata", t: "Errata", d: "Só se houver erro depois de impresso.", req: "opc", e: "2", who: "Grupo" },
+      { id: "aprovacao", t: "Folha de aprovação", d: "Banca, assinaturas e data da defesa.", req: "obr", e: "2", who: "Grupo" },
+      { id: "dedicatoria", t: "Dedicatória", d: "Texto curto, no fim da página.", req: "opc", e: "2", who: "Grupo" },
+      { id: "agradecimentos", t: "Agradecimentos", d: "Orientador, faculdade, família, quem ajudou no protótipo.", req: "opc", e: "2", who: "Grupo" },
+      { id: "epigrafe", t: "Epígrafe", d: "Citação com autoria, ligada ao tema.", req: "opc", e: "2", who: "Grupo" },
+      { id: "resumo", t: "Resumo em português", d: "Um parágrafo de 150 a 500 palavras (NBR 6028), escrito por último, seguido de 3 a 5 palavras-chave.", req: "obr", e: "12", who: "Grupo" },
+      { id: "abstract", t: "Abstract", d: "Tradução fiel do resumo para o inglês, seguida das keywords.", req: "obr", e: "12", who: "Grupo" },
+      { id: "lista-ilustracoes", t: "Lista de ilustrações", d: "Figuras, desenhos CAD e fluxogramas, com página.", req: "rec", e: "1", who: "Grupo" },
+      { id: "lista-tabelas", t: "Lista de tabelas", d: "O trabalho já tem cerca de 8 tabelas.", req: "rec", e: "1", who: "Grupo" },
+      { id: "lista-siglas", t: "Lista de abreviaturas e siglas", d: "NFT, DWC, DFT, CE, TDS, IoT, MQTT, ESP32, CAD, FMEA, ODS…", req: "rec", e: "1", who: "Grupo" },
+      { id: "lista-simbolos", t: "Lista de símbolos", d: "Vale incluir por causa das fórmulas da bomba e do reservatório (ρ, g, Q, H, η).", req: "opc", e: "1", who: "Grupo" },
+      { id: "sumario", t: "Sumário", d: "Todas as seções com número e página, na mesma grafia do texto.", req: "obr", e: "12", who: "Grupo" }
+    ]},
+    { id: "textuais", title: "Elementos textuais", note: "Introdução, desenvolvimento e conclusão. A numeração das páginas aparece a partir daqui.", items: [
+      { id: "cap1", t: "1 Introdução", d: "Contextualização, problema, hipótese, objetivos geral e específicos, questões norteadoras, justificativa, delimitação e estrutura do trabalho.", req: "obr", e: "1", who: "Emily" },
+      { id: "cap2", t: "2 Agricultura urbana, cultivo residencial e hobby", d: "Agricultura urbana e vertical, restrições de espaços compactos, jardinagem como hobby, perfil do usuário e dificuldades do cultivo doméstico.", req: "obr", e: "1", who: "Emily" },
+      { id: "cap3", t: "3 Fundamentos e tipos de hidroponia", d: "Histórico, classificações, quadro dos tipos de sistema, substratos e escolha justificada da técnica.", req: "obr", e: "1", who: "Henrique" },
+      { id: "cap4", t: "4 Plantas cultivadas", d: "Critérios de seleção, classificação das culturas, parâmetros por cultura e culturas escolhidas.", req: "obr", e: "1", who: "Henrique" },
+      { id: "cap5", t: "5 Nutrição e solução nutritiva", d: "Macro e micronutrientes, formulações, pH, CE, temperatura, oxigênio, manejo e faixas-alvo.", req: "obr", e: "1", who: "Henrique" },
+      { id: "cap6", t: "6 Projeto conceitual da estrutura", d: "Requisitos, alternativas, materiais, dimensionamento da bomba e do reservatório no papel, modos de falha. A montagem fica para a etapa 2.", req: "obr", e: "1", who: "Matheus" },
+      { id: "cap7", t: "7 Trabalhos relacionados", d: "Protocolo de busca, revisões da área, quadro comparativo e lacuna que o projeto preenche.", req: "obr", e: "1", who: "Kelwin" },
+      { id: "cap8", t: "8 Metodologia", d: "Testes da etapa 2 em detalhe: delineamento, variáveis, instrumentos, calibração, protocolo de coleta, teste de autonomia e análise dos dados.", req: "obr", e: "1", who: "Kelwin" },
+      { id: "cap9", t: "9 Fundamentos para a automação", d: "IoT, ESP32 e Raspberry Pi, sensores, atuadores, comunicação, dados e arquitetura prevista.", req: "obr", e: "1", who: "Kelwin" },
+      { id: "cronograma", t: "Cronograma", d: "Atividades da etapa 2 distribuídas por mês. Obrigatório no projeto de pesquisa (NBR 15287).", req: "obr", e: "1", who: "Grupo" },
+      { id: "recursos", t: "Recursos e orçamento", d: "Materiais, componentes e custo estimado do protótipo.", req: "rec", e: "1", who: "Matheus" },
+      { id: "cap10", t: "10 Conclusão", d: "Etapa 1: resultados esperados e considerações finais. Etapa 2: conclusão com os dados medidos.", req: "obr", e: "12", who: "Grupo" }
+    ]},
+    { id: "pos", title: "Elementos pós-textuais", items: [
+      { id: "referencias", t: "Referências", d: "Tudo que foi citado e nada além disso, em ordem alfabética (NBR 6023).", req: "obr", e: "12", who: "Grupo" },
+      { id: "glossario", t: "Glossário", d: "Termos técnicos de hidroponia e eletrônica, em ordem alfabética.", req: "opc", e: "1", who: "Grupo" },
+      { id: "apendices", t: "Apêndices", d: "Material feito pelo grupo: questionário do hobby, planilha de coleta, esboços e desenhos CAD, matriz de decisão.", req: "opc", e: "1", who: "Grupo" },
+      { id: "anexos", t: "Anexos", d: "Material de terceiros: datasheets dos sensores e da bomba, tabela de formulação Furlani/IAC.", req: "opc", e: "1", who: "Grupo" },
+      { id: "indice", t: "Índice", d: "Raro em TCC.", req: "opc", e: "2", who: "Grupo" }
+    ]},
+    { id: "formatacao", title: "Formatação", note: "Revisar antes de cada entrega.", items: [
+      { id: "fmt-folha", t: "Folha A4 e margens", d: "3 cm na superior e na esquerda; 2 cm na inferior e na direita.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-fonte", t: "Tamanho da fonte", d: "12 no texto; 10 em citações longas, notas, legendas e fontes de figuras.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-espaco", t: "Espaçamento entre linhas", d: "1,5 no texto; simples em citações longas, referências, legendas e natureza do trabalho.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-citlonga", t: "Citações longas", d: "Mais de 3 linhas: recuo de 4 cm, fonte 10, espaço simples, sem aspas.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-paginas", t: "Paginação", d: "Contada desde a folha de rosto, impressa a partir da Introdução, no canto superior direito.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-secoes", t: "Numeração das seções", d: "Progressiva (1, 1.1, 1.1.1), conforme a NBR 6024.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-titulos", t: "Títulos sem número", d: "Resumo, Sumário, Referências e Apêndices centralizados.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-figuras", t: "Figuras e tabelas", d: "Título em cima, numeração sequencial e fonte embaixo.", req: "obr", e: "12", who: "Grupo" },
+      { id: "fmt-citacoes", t: "Citações x referências", d: "Padrão autor-data (NBR 10520); toda citação está nas referências e vice-versa.", req: "obr", e: "12", who: "Grupo" }
+    ]}
+  ];
+
+  const ALL = [];
+  SECTIONS.forEach(s => s.items.forEach(it => { it.sec = s.id; ALL.push(it); }));
+
+  // ---- state ----
+  let checks = {};            // id -> {done, by, at}
+  let mode = "connecting";    // connecting | shared | readonly | local
+  let db = null, user = null, uid = null;
+  let names = {};
+  const filt = { etapa: "all", person: null, hideDone: false };
+  const writing = {}, pending = {};
+  const LS_CHECKS = "tcc-checklist-local";
+  const LS_FILT = "tcc-checklist-filters";
+
+  try { const f = JSON.parse(localStorage.getItem(LS_FILT) || "null"); if (f) Object.assign(filt, f); } catch (e) {}
+  function saveFilt() { try { localStorage.setItem(LS_FILT, JSON.stringify(filt)); } catch (e) {} }
+
+  // ---- build DOM once ----
+  const main = document.getElementById("main");
+  const rows = {};
+  const secEls = {};
+  SECTIONS.forEach(s => {
+    const sec = document.createElement("section");
+    sec.className = "sec";
+    const h = document.createElement("h2");
+    const ht = document.createElement("span"); ht.textContent = s.title;
+    const sc = document.createElement("span"); sc.className = "sc";
+    h.append(ht, sc);
+    sec.append(h);
+    if (s.note) { const p = document.createElement("p"); p.className = "snote"; p.textContent = s.note; sec.append(p); }
+    const list = document.createElement("div"); list.className = "list";
+    const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "Nenhum item com os filtros atuais."; empty.hidden = true;
+    s.items.forEach(it => {
+      const lab = document.createElement("label");
+      lab.className = "item";
+      const cb = document.createElement("input");
+      cb.type = "checkbox"; cb.id = "cb-" + it.id; cb.disabled = true;
+      cb.addEventListener("change", () => toggle(it.id, cb.checked));
+      const body = document.createElement("div"); body.className = "body";
+      const t = document.createElement("div"); t.className = "t"; t.textContent = it.t;
+      const d = document.createElement("div"); d.className = "d"; d.textContent = it.d;
+      const meta = document.createElement("div"); meta.className = "meta";
+      const c1 = document.createElement("span"); c1.className = "chip " + it.req; c1.textContent = REQ[it.req];
+      const c2 = document.createElement("span"); c2.className = "chip"; c2.textContent = ETAPA[it.e];
+      const c3 = document.createElement("span"); c3.className = "chip who"; c3.textContent = it.who;
+      const by = document.createElement("span"); by.className = "by";
+      meta.append(c1, c2, c3, by);
+      body.append(t, d, meta);
+      lab.append(cb, body);
+      list.append(lab);
+      rows[it.id] = { lab, cb, by, it };
+    });
+    list.append(empty);
+    sec.append(list);
+    main.append(sec);
+    secEls[s.id] = { sec, sc, empty, list };
+  });
+
+  const peopleEl = document.getElementById("people");
+  const personEls = {};
+  PEOPLE.forEach(p => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "person"; b.id = "person-" + p;
+    b.setAttribute("aria-pressed", "false");
+    const pn = document.createElement("span"); pn.className = "pn"; pn.textContent = p;
+    const pc = document.createElement("span"); pc.className = "pc";
+    const bar = document.createElement("div"); bar.className = "bar"; const bi = document.createElement("i"); bar.append(bi);
+    b.append(pn, pc, bar);
+    b.addEventListener("click", () => { filt.person = filt.person === p ? null : p; saveFilt(); applyFilters(); });
+    peopleEl.append(b);
+    personEls[p] = { b, pc, bi };
+  });
+
+  document.querySelectorAll("#segEtapa button").forEach(btn => {
+    btn.addEventListener("click", () => { filt.etapa = btn.dataset.v; saveFilt(); applyFilters(); });
+  });
+  const hideDone = document.getElementById("hideDone");
+  hideDone.addEventListener("change", () => { filt.hideDone = hideDone.checked; saveFilt(); applyFilters(); });
+  document.getElementById("clearPerson").addEventListener("click", () => { filt.person = null; saveFilt(); applyFilters(); });
+
+  // ---- render ----
+  function isDone(id) { return !!(checks[id] && checks[id].done); }
+  function inEtapa(it) { return filt.etapa === "all" || it.e.includes(filt.etapa); }
+
+  function fmtDate(iso) {
+    try { return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }); } catch (e) { return ""; }
+  }
+
+  function paintRows() {
+    ALL.forEach(it => {
+      const r = rows[it.id];
+      const c = checks[it.id];
+      const done = isDone(it.id);
+      r.cb.checked = done;
+      r.lab.classList.toggle("done", done);
+      r.cb.disabled = !(mode === "shared" || mode === "local");
+      if (done && c) {
+        const who = c.by && mode !== "local" ? ((names[c.by] && names[c.by].name) || "alguém do grupo") : null;
+        const when = c.at ? fmtDate(c.at) : "";
+        r.by.textContent = "Concluído" + (who ? " por " + who : "") + (when ? " · " + when : "");
+      } else {
+        r.by.textContent = "";
+      }
+    });
+    paintStats();
+    applyFilters();
+  }
+
+  function paintStats() {
+    const scope = ALL.filter(inEtapa);
+    const doneN = scope.filter(it => isDone(it.id)).length;
+    const pct = scope.length ? Math.round(doneN / scope.length * 100) : 0;
+    document.getElementById("barAll").style.width = pct + "%";
+    const ca = document.getElementById("countAll");
+    ca.textContent = doneN + " ";
+    const sm = document.createElement("small"); sm.textContent = "de " + scope.length + " · " + pct + "%";
+    ca.append(sm);
+    PEOPLE.forEach(p => {
+      const mine = scope.filter(it => it.who === p);
+      const d = mine.filter(it => isDone(it.id)).length;
+      personEls[p].pc.textContent = d + " de " + mine.length;
+      personEls[p].bi.style.width = (mine.length ? Math.round(d / mine.length * 100) : 0) + "%";
+    });
+    SECTIONS.forEach(s => {
+      const its = s.items.filter(inEtapa);
+      const d = its.filter(it => isDone(it.id)).length;
+      secEls[s.id].sc.textContent = d + "/" + its.length;
+    });
+  }
+
+  function applyFilters() {
+    document.querySelectorAll("#segEtapa button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === filt.etapa)));
+    hideDone.checked = !!filt.hideDone;
+    PEOPLE.forEach(p => personEls[p].b.setAttribute("aria-pressed", String(filt.person === p)));
+    document.getElementById("clearPerson").hidden = !filt.person;
+    SECTIONS.forEach(s => {
+      let visible = 0, first = true;
+      s.items.forEach(it => {
+        const show = inEtapa(it) && (!filt.person || it.who === filt.person) && !(filt.hideDone && isDone(it.id));
+        rows[it.id].lab.hidden = !show;
+        rows[it.id].lab.classList.toggle("first", show && first);
+        if (show) { visible++; first = false; }
+      });
+      secEls[s.id].empty.hidden = visible > 0;
+      secEls[s.id].sec.hidden = visible === 0 && (filt.person !== null);
+    });
+    paintStats();
+  }
+
+  function setMode(m, msg) {
+    mode = m;
+    const st = document.getElementById("status");
+    st.dataset.mode = m;
+    document.getElementById("statusText").textContent =
+      m === "shared" ? "Compartilhado com o grupo" :
+      m === "readonly" ? "Somente leitura" :
+      m === "local" ? "Salvo só neste navegador" : "Conectando…";
+    const n = document.getElementById("notice");
+    n.hidden = !msg;
+    n.textContent = msg || "";
+    paintRows();
+  }
+
+  // ---- names ----
+  async function resolveNames() {
+    if (!user) return;
+    const ids = [...new Set(Object.values(checks).map(c => c && c.by).filter(Boolean))];
+    if (!ids.length) return;
+    try { names = await user.profiles(ids); } catch (e) {}
+    paintRows();
+  }
+
+  // ---- writes ----
+  function toggle(id, val) {
+    if (mode !== "shared" && mode !== "local") return;
+    checks[id] = { done: val, by: uid || null, at: new Date().toISOString() };
+    paintRows();
+    if (mode === "local") {
+      try { localStorage.setItem(LS_CHECKS, JSON.stringify(checks)); } catch (e) {}
+      return;
+    }
+    write(id, 0);
+  }
+
+  async function write(id, attempt) {
+    if (writing[id]) { pending[id] = true; return; }
+    writing[id] = true;
+    const c = checks[id];
+    try {
+      await db.doc("checks/" + id).set({ done: !!c.done, by: c.by || null, at: c.at });
+    } catch (e) {
+      const code = e && e.code;
+      if (code === "invalid_argument" || code === "not_granted") {
+        setMode("readonly", "Você não tem permissão para marcar itens nesta página. Peça ao dono do checklist para convidar você como editor.");
+      } else if (code === "unavailable" && attempt === 0) {
+        writing[id] = false;
+        setTimeout(() => write(id, 1), 600 + Math.random() * 800);
+        return;
+      } else if (code === "quota_exceeded") {
+        showNotice("O armazenamento desta página está cheio. A marcação não foi salva.");
+      } else {
+        showNotice("Não foi possível salvar a marcação agora. Tente de novo em instantes.");
+      }
+    } finally {
+      writing[id] = false;
+      if (pending[id] && mode === "shared") { pending[id] = false; write(id, 0); }
+    }
+  }
+
+  function showNotice(t) { const n = document.getElementById("notice"); n.textContent = t; n.hidden = false; }
+
+  // ---- init ----
+  function startLocal(msg) {
+    try { checks = JSON.parse(localStorage.getItem(LS_CHECKS) || "{}") || {}; } catch (e) { checks = {}; }
+    setMode("local", msg);
+  }
+
+  applyFilters();
+  paintRows();
+
+  const C = window.claude;
+  if (!C || typeof C.use !== "function") {
+    startLocal("Esta cópia não está conectada ao armazenamento compartilhado: as marcações ficam só neste navegador.");
+    return;
+  }
+  (async () => {
+    try { user = await C.use("user"); } catch (e) { user = null; }
+    try { db = await C.use("db"); } catch (e) { db = null; }
+    if (!db) {
+      startLocal("Entre na sua conta Claude para ver e marcar o progresso do grupo. Por enquanto, as marcações ficam só neste navegador.");
+      return;
+    }
+    try { uid = user ? await user.id() : null; } catch (e) { uid = null; }
+    let canWrite = null;
+    try { canWrite = user ? await user.can("data.write") : null; } catch (e) { canWrite = null; }
+    if (canWrite === false) setMode("readonly", "Você está vendo o progresso do grupo. Para marcar itens, peça ao dono do checklist para convidar você como editor.");
+    else setMode("shared");
+    db.collection("checks").onSnapshot(snap => {
+      const next = {};
+      snap.docs.forEach(d => { if (d.exists) next[d.id] = d.data(); });
+      // keep this view's own in-flight values
+      Object.keys(writing).forEach(id => { if (writing[id] && checks[id]) next[id] = checks[id]; });
+      checks = next;
+      paintRows();
+      resolveNames();
+    }, err => {
+      showNotice("A conexão com o progresso do grupo caiu. Recarregue a página para continuar.");
+    });
+  })();
+})();
+</script>
+
+</body></html>
